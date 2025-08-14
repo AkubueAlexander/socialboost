@@ -13,14 +13,10 @@
 
 
     // Fetch orders
-    $sql = 'SELECT socialorder.id AS orderId, socialorder.*, service.*,user.* 
-            FROM socialorder 
-            INNER JOIN service ON socialorder.serviceId = service.id            
-            INNER JOIN user ON socialorder.advId = user.id  
-            ORDER BY socialorder.orderDate DESC'; 
+    $sql = 'SELECT * FROM user ORDER BY fullName ASC'; 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $rowsOrder = $stmt->fetchAll();
+    $rowsUser = $stmt->fetchAll();
 
     
     
@@ -240,7 +236,7 @@
             <!-- Main content area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
 
-                <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="orderTable()" x-init="init()">
+                <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="userTable()" x-init="init()">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
                         <h1 class="text-xl font-semibold text-gray-800">Order History</h1>
                         <input type="text" placeholder="Search..."
@@ -253,13 +249,12 @@
                             <thead class="bg-gray-100 text-gray-700 font-semibold">
                                 <tr>
                                     <th class="px-4 py-2 text-left">ID</th>
-                                    <th class="px-4 py-2 text-left">Name</th>
-                                    <th class="px-4 py-2 text-left">Title</th>
-                                    <th class="px-4 py-2 text-left">Price</th>
-                                    <th class="px-4 py-2 text-left">Quantity</th>
-                                    <th class="px-4 py-2 text-left">Status</th>
-                                    <th class="px-4 py-2 text-left">Social URL</th>
-                                    <th class="px-4 py-2 text-left">Date</th>
+                                    <th class="px-4 py-2 text-left">Full Name</th>
+                                    <th class="px-4 py-2 text-left">User Name</th>
+                                    <th class="px-4 py-2 text-left">Email</th>
+                                    <th class="px-4 py-2 text-left">User Type</th>
+                                    <th class="px-4 py-2 text-left">Phone</th>
+                                    <th class="px-4 py-2 text-left">Status</th>                                    
                                     <th class="px-4 py-2 text-left">Actions</th>
 
                                 </tr>
@@ -269,19 +264,12 @@
                                     <tr class="hover:bg-gray-50 border-b">
                                         <td class="px-4 py-2" x-text="row.id"></td>
                                         <td class="px-4 py-2" x-text="row.fullName"></td>
-                                        <td class="px-4 py-2" x-text="row.title"></td>
-                                        <td class="px-4 py-2" x-text="row.amount"></td>
-                                        <td class="px-4 py-2" x-text="row.quantity"></td>
-                                        <td class="px-4 py-2">
-                                            <span class="text-xs px-2 py-1 rounded-full"
-                                                :class="row.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
-                                                x-text="row.status"></span>
-                                        </td>
-                                        <td class="px-4 py-2">
-                                            <a :href="row.socialurl" class="text-blue-600 underline break-all"
-                                                x-text="row.socialurl"></a>
-                                        </td>
-                                        <td class="px-4 py-2" x-text="row.date"></td>
+                                        <td class="px-4 py-2" x-text="row.userName"></td>
+                                        <td class="px-4 py-2" x-text="row.email"></td>
+                                        <td class="px-4 py-2" x-text="row.userType"></td>
+                                        <td class="px-4 py-2" x-text="row.phone"></td>
+                                        <td class="px-4 py-2" x-text="row.verifiedStatus"></td>
+                                                                               
                                         
                                         <td class="border border-gray-300 p-2 flex gap-2">
                                             <button @click="showModal(row, false)"
@@ -303,7 +291,7 @@
                             </tbody>
                         </table>
 
-                        <!-- Modal (drop-in replacement) -->
+                        <!-- Modal  -->
                         <div x-show="modalOpen" x-cloak
                             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" x-transition
                             @keydown.escape.window="modalOpen=false" @click.self="modalOpen=false">
@@ -324,72 +312,57 @@
                                             readonly>
                                     </div>
 
-                                    <!-- Name -->
+                                    <!-- Full Name -->
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Name</label>
+                                        <label class="block text-sm font-medium mb-1">Full Name</label>
                                         <input type="text" x-model="modalData.fullName"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Title -->
+                                    <!-- User Name -->
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Title</label>
-                                        <input type="text" x-model="modalData.title"
+                                        <label class="block text-sm font-medium mb-1">User Name</label>
+                                        <input type="text" x-model="modalData.userName"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Price -->
+                                    <!-- Email -->
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Price</label>
-                                        <input type="number" step="0.01" x-model.number="modalData.amountValue"
+                                        <label class="block text-sm font-medium mb-1">Email</label>
+                                        <input type="email" step="0.01" x-model.number="modalData.email"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Quantity -->
+                                    <!-- User Type -->
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Quantity</label>
-                                        <input type="number" min="0" x-model.number="modalData.quantity"
+                                        <label class="block text-sm font-medium mb-1">User Type</label>
+                                        <input type="text" min="0" x-model.number="modalData.userType"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Status -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Status</label>
-                                        <select x-model="modalData.status" class="w-full border rounded-lg p-2"
-                                            :disabled="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                            <template x-for="s in statuses" :key="s">
-                                                <option :value="s" x-text="s"></option>
-                                            </template>
-                                        </select>
-                                    </div>
+                                   
 
-                                    <!-- Social URL -->
-                                    <div class="md:col-span-2">
-                                        <label class="block text-sm font-medium mb-1">Social URL</label>
-                                        <input type="url" x-model="modalData.socialurl"
+                                    <!-- Phone -->
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Phone</label>
+                                        <input type="phone" x-model="modalData.phone"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Date -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Date</label>
-                                        <input type="date" x-model="modalData.dateISO"
-                                            class="w-full border rounded-lg p-2" :disabled="!isEditing"
+                                   <!-- Verified Status -->
+                                    <div >
+                                        <label class="block text-sm font-medium mb-1">Verified Status</label>
+                                        <input type="text" x-model="modalData.verifiedStatus"
+                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Pretty date (read-only display) -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Formatted Date</label>
-                                        <input type="text"
-                                            class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
-                                            :value="formatDisplayDate(modalData.dateISO)" readonly>
-                                    </div>
+                                    
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-6">
@@ -525,7 +498,7 @@
         overlay.classList.remove('active');
     });
 
-    const ordersFromPHP = <?php echo json_encode($rowsOrder, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    const usersFromPHP = <?php echo json_encode($rowsUser, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
     function formatDate(dateStr) {
         const date = new Date(dateStr);
@@ -536,7 +509,7 @@
         });
     }
 
-    function orderTable() {
+    function userTable() {
         return {
             search: '',
             currentPage: 1,
@@ -548,43 +521,18 @@
             modalOpen: false,
             isEditing: false,
             modalData: {},
-            statuses: ['Pending', 'In Progress', 'Completed'],
-
-            // helpers
-            toISODate(dateStr) {
-                // robust ISO yyyy-mm-dd for input[type=date]
-                const d = dateStr ? new Date(dateStr) : new Date();
-                // avoid timezone offset issues
-                const tz = d.getTimezoneOffset() * 60000;
-                return new Date(d.getTime() - tz).toISOString().slice(0, 10);
-            },
-            formatDisplayDate(iso) {
-                if (!iso) return '';
-                const [y, m, d] = iso.split('-');
-                const dt = new Date(`${y}-${m}-${d}T00:00:00`);
-                return dt.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-            },
-
+           
             init() {
-                this.rows = ordersFromPHP.map(order => {
-                    const amountNum = parseFloat(order.amountSpent ?? order.amount ?? 0) || 0;
-                    const rawDate = order.orderDate ?? order.date ?? new Date().toISOString();
-                    const iso = this.toISODate(rawDate);
+                this.rows = usersFromPHP.map(user => {                  
+                    
                     return {
-                        id: order.orderId,
-                        fullName: order.fullName,
-                        title: order.title,
-                        amountValue: amountNum, // numeric, used in modal input
-                        amount: `$${amountNum.toFixed(2)}`, // formatted, used in table
-                        quantity: Number(order.quantity) || 0,
-                        status: order.status ?? 'Pending',
-                        socialurl: order.socialUrl ?? '',
-                        dateISO: iso, // yyyy-mm-dd for input[type=date]
-                        date: this.formatDisplayDate(iso) // pretty for table
+                        id: user.id,
+                        fullName: user.fullName,
+                        userName: user.userName,                      
+                        email: user.email,
+                        userType: user.userType,
+                        phone: user.phone,
+                        verifiedStatus: user.verifiedStatus
                     };
                 });
                 this.filtered = this.rows;
@@ -631,14 +579,11 @@
                     this.rows[i] = {
                         ...this.rows[i],
                         fullName: this.modalData.fullName,
-                        title: this.modalData.title,
-                        amountValue: amountNum,
-                        amount: `$${amountNum.toFixed(2)}`,
-                        quantity: Number(this.modalData.quantity) || 0,
-                        status: this.modalData.status,
-                        socialurl: this.modalData.socialurl,
-                        dateISO: iso,
-                        date: this.formatDisplayDate(iso)
+                        userName: this.modalData.userName,                                  
+                        email: this.modalData.email,
+                        userType: this.modalData.userType,
+                        verifiedStatus: this.modalData.verifiedStatus                        
+                        
                     };
                     // refresh filtered so table reflects changes immediately
                     this.filterRows();

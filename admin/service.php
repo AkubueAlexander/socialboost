@@ -13,14 +13,12 @@
 
 
     // Fetch orders
-    $sql = 'SELECT socialorder.id AS orderId, socialorder.*, service.*,user.* 
-            FROM socialorder 
-            INNER JOIN service ON socialorder.serviceId = service.id            
-            INNER JOIN user ON socialorder.advId = user.id  
-            ORDER BY socialorder.orderDate DESC'; 
+    $sql = 'SELECT * FROM service ORDER BY id ASC'; 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $rowsOrder = $stmt->fetchAll();
+    $rowsService = $stmt->fetchAll();
+
+    
 
     
     
@@ -239,10 +237,17 @@
 
             <!-- Main content area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+                
 
-                <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="orderTable()" x-init="init()">
+
+                <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="serviceTable()" x-init="init()">
+                    <div class="flex justify-end mb-4">
+                    <button class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">
+                        Create
+                    </button>
+                </div>
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                        <h1 class="text-xl font-semibold text-gray-800">Order History</h1>
+                        <h1 class="text-xl font-semibold text-gray-800">Service</h1>
                         <input type="text" placeholder="Search..."
                             class="w-full md:w-1/3 px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none"
                             x-model="search" @input="filterRows()" />
@@ -253,13 +258,26 @@
                             <thead class="bg-gray-100 text-gray-700 font-semibold">
                                 <tr>
                                     <th class="px-4 py-2 text-left">ID</th>
-                                    <th class="px-4 py-2 text-left">Name</th>
                                     <th class="px-4 py-2 text-left">Title</th>
-                                    <th class="px-4 py-2 text-left">Price</th>
-                                    <th class="px-4 py-2 text-left">Quantity</th>
-                                    <th class="px-4 py-2 text-left">Status</th>
-                                    <th class="px-4 py-2 text-left">Social URL</th>
-                                    <th class="px-4 py-2 text-left">Date</th>
+                                    <th class="px-4 py-2 text-left">Advertiser Description</th>
+                                    <th class="px-4 py-2 text-left">Earner Description</th>
+                                    <th class="px-4 py-2 text-left">Advertiser Price</th>
+                                    <th class="px-4 py-2 text-left">Earner Price</th>
+                                    <th class="px-4 py-2 text-left">Count</th>
+                                    <th class="px-4 py-2 text-left">Platform</th>
+                                    <th class="px-4 py-2 text-left">Image Url</th>
+                                    <th class="px-4 py-2 text-left">Image Background</th>
+                                    <th class="px-4 py-2 text-left">Icon</th>
+                                    <th class="px-4 py-2 text-left">Icon Background</th>
+                                    <th class="px-4 py-2 text-left">Icon Colour</th>
+                                    <th class="px-4 py-2 text-left">Rating</th>
+                                    <th class="px-4 py-2 text-left">Rating Count</th>
+                                    <th class="px-4 py-2 text-left">Platform Background</th>
+                                    <th class="px-4 py-2 text-left">Platform Colour</th>
+                                    <th class="px-4 py-2 text-left">High Light</th>
+                                    <th class="px-4 py-2 text-left">High Light Colour</th>
+                                    <th class="px-4 py-2 text-left">Hight Light Background</th>
+                                    <th class="px-4 py-2 text-left">Category</th>
                                     <th class="px-4 py-2 text-left">Actions</th>
 
                                 </tr>
@@ -268,21 +286,29 @@
                                 <template x-for="row in paginatedRows()" :key="row.id">
                                     <tr class="hover:bg-gray-50 border-b">
                                         <td class="px-4 py-2" x-text="row.id"></td>
-                                        <td class="px-4 py-2" x-text="row.fullName"></td>
                                         <td class="px-4 py-2" x-text="row.title"></td>
-                                        <td class="px-4 py-2" x-text="row.amount"></td>
-                                        <td class="px-4 py-2" x-text="row.quantity"></td>
-                                        <td class="px-4 py-2">
-                                            <span class="text-xs px-2 py-1 rounded-full"
-                                                :class="row.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
-                                                x-text="row.status"></span>
-                                        </td>
-                                        <td class="px-4 py-2">
-                                            <a :href="row.socialurl" class="text-blue-600 underline break-all"
-                                                x-text="row.socialurl"></a>
-                                        </td>
-                                        <td class="px-4 py-2" x-text="row.date"></td>
-                                        
+                                        <td class="px-4 py-2" x-text="row.advDes"></td>
+                                        <td class="px-4 py-2" x-text="row.earnerDes"></td>
+                                        <td class="px-4 py-2" x-text="row.advPrice"></td>
+                                        <td class="px-4 py-2" x-text="row.earnerPrice"></td>
+                                        <td class="px-4 py-2" x-text="row.per"></td>
+                                        <td class="px-4 py-2" x-text="row.platform"></td>
+                                        <td class="px-4 py-2" x-text="row.imgUrl"></td>
+                                        <td class="px-4 py-2" x-text="row.imgBg"></td>
+                                        <td class="px-4 py-2" x-text="row.icon"></td>
+                                        <td class="px-4 py-2" x-text="row.iconBg"></td>
+                                        <td class="px-4 py-2" x-text="row.iconColour"></td>
+                                        <td class="px-4 py-2" x-text="row.rating"></td>
+                                        <td class="px-4 py-2" x-text="row.ratingCount"></td>
+                                        <td class="px-4 py-2" x-text="row.platformBg"></td>
+                                        <td class="px-4 py-2" x-text="row.platformColour"></td>
+                                        <td class="px-4 py-2" x-text="row.highLight"></td>
+                                        <td class="px-4 py-2" x-text="row.highLightColour"></td>
+                                        <td class="px-4 py-2" x-text="row.highLightBg"></td>
+                                        <td class="px-4 py-2" x-text="row.category"></td>
+
+
+
                                         <td class="border border-gray-300 p-2 flex gap-2">
                                             <button @click="showModal(row, false)"
                                                 class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
@@ -303,13 +329,15 @@
                             </tbody>
                         </table>
 
-                        <!-- Modal (drop-in replacement) -->
+                        <!-- Modal  -->
                         <div x-show="modalOpen" x-cloak
                             class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" x-transition
                             @keydown.escape.window="modalOpen=false" @click.self="modalOpen=false">
-                            <div class="bg-white w-[95%] max-w-2xl rounded-xl shadow-lg p-6">
+                            <div
+                                class="bg-white w-[95%] max-w-2xl rounded-xl shadow-lg p-6  max-h-[90vh] overflow-y-auto">
                                 <div class="flex items-center justify-between mb-4">
-                                    <h2 class="text-lg font-semibold" x-text="isEditing ? 'Edit Order' : 'View Order'">
+                                    <h2 class="text-lg font-semibold"
+                                        x-text="isEditing ? 'Edit Order' : 'View Service'">
                                     </h2>
                                     <button @click="modalOpen=false"
                                         class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
@@ -319,82 +347,143 @@
                                     <!-- ID (always read-only) -->
                                     <div>
                                         <label class="block text-sm font-medium mb-1">ID</label>
-                                        <input type="text" x-model="modalData.id"
+                                        <input type="text" x-model="modalData.id" name="id"
                                             class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
                                             readonly>
-                                    </div>
-
-                                    <!-- Name -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Name</label>
-                                        <input type="text" x-model="modalData.fullName"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
                                     <!-- Title -->
                                     <div>
                                         <label class="block text-sm font-medium mb-1">Title</label>
-                                        <input type="text" x-model="modalData.title"
+                                        <input type="text" x-model="modalData.title" name="title" placeholder="Title"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Price -->
+
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Price</label>
-                                        <input type="number" step="0.01" x-model.number="modalData.amountValue"
+                                        <label class="block text-sm font-medium mb-1">Advertiser Description</label>
+                                        <texarea class="md:col-span-2" type="text" x-model="modalData.advDes"
+                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                            :class="!isEditing ? 'bg-gray-50' : ''" name="advDes"
+                                            placeholder="Advertiser Description"> </textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Earner Description</label>
+                                        <texarea class="md:col-span-2" type="text" x-model="modalData.earnerDes"
+                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                            :class="!isEditing ? 'bg-gray-50' : ''" name="earnerDes"
+                                            placeholder="Earner Description"> </textarea>
+                                    </div>
+
+
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Per(Count)</label>
+                                        <input type="number" x-model="modalData.per" name="per"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Quantity -->
+
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Quantity</label>
-                                        <input type="number" min="0" x-model.number="modalData.quantity"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
+                                        <label class="block text-sm font-medium mb-1">Platform</label>
+                                        <input type="text" x-model="modalData.platform" name="platform"
+                                            placeholder="e.g Apple" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Status -->
+
+
+
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Status</label>
-                                        <select x-model="modalData.status" class="w-full border rounded-lg p-2"
-                                            :disabled="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                            <template x-for="s in statuses" :key="s">
-                                                <option :value="s" x-text="s"></option>
-                                            </template>
-                                        </select>
+                                        <label class="block text-sm font-medium mb-1">Image Url</label>
+                                        <input type="phone" x-model="modalData.imgUrl" name="imgUrl"
+                                            placeholder="e.g https://image.png" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Social URL -->
-                                    <div class="md:col-span-2">
-                                        <label class="block text-sm font-medium mb-1">Social URL</label>
-                                        <input type="url" x-model="modalData.socialurl"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
+
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Image Background</label>
+                                        <input type="text" x-model="modalData.imgBg" name="imgBg"
+                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Icon</label>
+                                        <input type="text" x-model="modalData.icon" name="icon"
+                                            placeholder="e.g fas fa-apple" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Icon Background</label>
+                                        <input type="text" x-model="modalData.iconBg" name="iconBg"
+                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Icon Colour</label>
+                                        <input type="text" x-model="modalData.iconColour" name="iconColour"
+                                            placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Rating</label>
+                                        <input type="text" x-model="modalData.rating" name="rating"
+                                            placeholder="e.g 4.5" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Rating Count</label>
+                                        <input type="text" x-model="modalData.ratingCount" name="ratingCount"
+                                            placeholder="e.g 1500" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Platform Background</label>
+                                        <input type="text" x-model="modalData.platformBg" name="platformBg"
+                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Platform Colour</label>
+                                        <input type="text" x-model="modalData.platformColour" name="platformColour"
+                                            placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Highlight</label>
+                                        <input type="text" x-model="modalData.highLight" name="highLight"
+                                            placeholder="e.g New" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Highlight Colour</label>
+                                        <input type="text" x-model="modalData.highLightColour" name="highLightColour"
+                                            placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Date -->
                                     <div>
-                                        <label class="block text-sm font-medium mb-1">Date</label>
-                                        <input type="date" x-model="modalData.dateISO"
-                                            class="w-full border rounded-lg p-2" :disabled="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
+                                        <label class="block text-sm font-medium mb-1">Highlight Background</label>
+                                        <input type="text" x-model="modalData.highLightBg" name="highLightBg"
+                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Category</label>
+                                        <input type="text" x-model="modalData.category" name="category"
+                                            placeholder="e.g Followers | Reviews" class="w-full border rounded-lg p-2"
+                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
 
-                                    <!-- Pretty date (read-only display) -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Formatted Date</label>
-                                        <input type="text"
-                                            class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
-                                            :value="formatDisplayDate(modalData.dateISO)" readonly>
-                                    </div>
+
+
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-6">
                                     <button @click="modalOpen=false" class="px-4 py-2 rounded-lg border">Close</button>
-                                    <button x-show="isEditing" @click="saveEdit()"
+                                    <button x-show="isEditing" @click="saveEdit()" type="submit" name="editSubmit"
                                         class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
                                         Save
                                     </button>
@@ -525,7 +614,7 @@
         overlay.classList.remove('active');
     });
 
-    const ordersFromPHP = <?php echo json_encode($rowsOrder, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    const servicesFromPHP = <?php echo json_encode($rowsService, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
     function formatDate(dateStr) {
         const date = new Date(dateStr);
@@ -536,7 +625,7 @@
         });
     }
 
-    function orderTable() {
+    function serviceTable() {
         return {
             search: '',
             currentPage: 1,
@@ -548,43 +637,32 @@
             modalOpen: false,
             isEditing: false,
             modalData: {},
-            statuses: ['Pending', 'In Progress', 'Completed'],
-
-            // helpers
-            toISODate(dateStr) {
-                // robust ISO yyyy-mm-dd for input[type=date]
-                const d = dateStr ? new Date(dateStr) : new Date();
-                // avoid timezone offset issues
-                const tz = d.getTimezoneOffset() * 60000;
-                return new Date(d.getTime() - tz).toISOString().slice(0, 10);
-            },
-            formatDisplayDate(iso) {
-                if (!iso) return '';
-                const [y, m, d] = iso.split('-');
-                const dt = new Date(`${y}-${m}-${d}T00:00:00`);
-                return dt.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-            },
 
             init() {
-                this.rows = ordersFromPHP.map(order => {
-                    const amountNum = parseFloat(order.amountSpent ?? order.amount ?? 0) || 0;
-                    const rawDate = order.orderDate ?? order.date ?? new Date().toISOString();
-                    const iso = this.toISODate(rawDate);
+                this.rows = servicesFromPHP.map(service => {
+
                     return {
-                        id: order.orderId,
-                        fullName: order.fullName,
-                        title: order.title,
-                        amountValue: amountNum, // numeric, used in modal input
-                        amount: `$${amountNum.toFixed(2)}`, // formatted, used in table
-                        quantity: Number(order.quantity) || 0,
-                        status: order.status ?? 'Pending',
-                        socialurl: order.socialUrl ?? '',
-                        dateISO: iso, // yyyy-mm-dd for input[type=date]
-                        date: this.formatDisplayDate(iso) // pretty for table
+                        id: service.id,
+                        title: service.title,
+                        advDes: service.advDes,
+                        earnerDes: service.earnerDes,
+                        advPrice: service.advPrice,
+                        earnerPrice: service.earnerPrice,
+                        per: service.per,
+                        platform: service.platform,
+                        imgUrl: service.imgUrl,
+                        imgBg: service.imgBg,
+                        icon: service.icon,
+                        iconBg: service.iconBg,
+                        iconColour: service.iconColour,
+                        rating: service.rating,
+                        ratingCount: service.ratingCount,
+                        platformBg: service.platformBg,
+                        platformColour: service.platformColour,
+                        highLight: service.highLight,
+                        highLightColour: service.highLightColour,
+                        highLightBg: service.highLightBg,
+                        category: service.category
                     };
                 });
                 this.filtered = this.rows;
@@ -626,19 +704,35 @@
                 // apply modal changes back to table row
                 const i = this.rows.findIndex(r => r.id === this.modalData.id);
                 if (i !== -1) {
-                    const amountNum = Number(this.modalData.amountValue) || 0;
-                    const iso = this.modalData.dateISO || this.toISODate(new Date());
+                    // update the row with modal data
                     this.rows[i] = {
                         ...this.rows[i],
-                        fullName: this.modalData.fullName,
                         title: this.modalData.title,
-                        amountValue: amountNum,
-                        amount: `$${amountNum.toFixed(2)}`,
-                        quantity: Number(this.modalData.quantity) || 0,
-                        status: this.modalData.status,
-                        socialurl: this.modalData.socialurl,
-                        dateISO: iso,
-                        date: this.formatDisplayDate(iso)
+                        advDes: this.modalData.advDes,
+                        earnerDes: this.modalData.earnerDes,
+                        advPrice: this.modalData.advPrice,
+                        per: this.modalData.per,
+                        title: this.modalData.title,
+                        advDes: this.modalData.advDes,
+                        earnerDes: this.modalData.earnerDes,
+                        advPrice: this.modalData.advPrice,
+                        per: this.modalData.per,
+                        platform: this.modalData.platform,
+                        imgUrl: this.modalData.imgUrl,
+                        imgBg: this.modalData.imgBg,
+                        icon: this.modalData.icon,
+                        iconBg: this.modalData.iconBg,
+                        iconColour: this.modalData.iconColour,
+                        rating: this.modalData.rating,
+                        ratingCount: this.modalData.ratingCount,
+                        platformBg: this.modalData.platformBg,
+                        platformColour: this.modalData.platformColour,
+                        highLight: this.modalData.highLight,
+                        highLightColour: this.modalData.highLightColour,
+                        highLightBg: this.modalData.highLightBg,
+                        category: this.modalData.category
+
+
                     };
                     // refresh filtered so table reflects changes immediately
                     this.filterRows();

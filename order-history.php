@@ -12,7 +12,7 @@
     // Fetch orders
     $sql = 'SELECT socialorder.id AS orderId, socialorder.*, service.* 
             FROM socialorder 
-            INNER JOIN service ON socialorder.serviceId = service.id 
+            INNER JOIN service ON socialorder.serviceId = service.id            
             WHERE socialorder.advId = :id 
             ORDER BY socialorder.id DESC'; 
     $stmt = $pdo->prepare($sql);

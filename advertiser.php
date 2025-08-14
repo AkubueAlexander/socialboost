@@ -42,6 +42,8 @@
     $rowUser = $stmtUser->fetch();
 
     
+
+    
     
 
 ?>
@@ -454,6 +456,7 @@
                                     if ($status == 'Completed') {
                                         $bg = 'bg-green-100';
                                         $colour = 'text-green-800';
+                                        
                                     }
                                     elseif ($status == 'In Progress') {
                                         $bg = 'bg-yellow-100';
@@ -469,9 +472,7 @@
                                         class="px-3 py-1 rounded-full text-xs font-medium <?php echo $bg ?> <?php echo $colour ?>"><?php echo $status ?></span>
                                     <p class="text-sm text-gray-500 mt-2"><?php echo $count ?> out of <?php echo $row -> quantity ?> delivered</p>
                                     <div class="flex items-center mt-1">
-                                        <div class="w-24 h-1 bg-gray-200 rounded-full">
-                                            <div class="h-1 bg-green-500 rounded-full" style="width: 100%"></div>
-                                        </div>
+                                        
                                         <span class="ml-2 text-xs text-gray-500"><?php echo number_format($percentage, 0) ?>%</span>
                                     </div>
                                 </div>
@@ -556,41 +557,9 @@
         }
     });
 
-    // Simulate order progress updates
-    function simulateProgress() {
-        const progressBars = document.querySelectorAll('.order-card .h-1');
-        progressBars.forEach(bar => {
-            const currentWidth = parseInt(bar.style.width) || 0;
-            if (currentWidth < 100) {
-                const increment = Math.floor(Math.random() * 5) + 1;
-                const newWidth = Math.min(currentWidth + increment, 100);
-                bar.style.width = `${newWidth}%`;
+    
 
-                // Update percentage text
-                const percentageText = bar.parentElement.nextElementSibling;
-                if (percentageText) {
-                    percentageText.textContent = `${newWidth}%`;
-                }
-
-                // Update status if reaches 100%
-                if (newWidth === 100) {
-                    const statusBadge = bar.closest('.order-card').querySelector('.rounded-full');
-                    if (statusBadge) {
-                        statusBadge.className =
-                            'px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800';
-                        statusBadge.textContent = 'Completed';
-                    }
-                }
-            }
-        });
-
-        setTimeout(simulateProgress, 5000);
-    }
-
-    // Start simulation after page loads
-    window.addEventListener('load', () => {
-        setTimeout(simulateProgress, 3000);
-    });
+    
     </script>
 </body>
 
