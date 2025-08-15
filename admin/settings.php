@@ -13,13 +13,13 @@
 
     if (isset($_POST['submit'])) {
     $email = trim($_POST['email']);
-    $id = trim($_POST['id']);
-    $phone = trim($_POST['phone']);
-    $fullName = trim($_POST['fullName']);
+    $id = $_SESSION['id'];
+    $pass = trim($_POST['pass']);
+    $passMd5 = md5($pass);
 
-    $stmt = $pdo->prepare("UPDATE user SET fullName = :fullName, email = :email, phone = :phone WHERE id = :id");
-    $stmt->execute(['id' => $id, 'fullName' => $fullName, 'email' => $email, 'phone' => $phone]);
-    header("Location: advertiser-settings?success=1");
+    $stmt = $pdo->prepare("UPDATE admin SET email = :email, pass = :pass WHERE id = :id");
+    $stmt->execute(['id' => $id, 'email' => $email, 'pass' => $passMd5]);
+    header("Location: settings?updated=1");
 
     }
     
@@ -45,6 +45,7 @@
     <title>Boostbrands - Service Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     tailwind.config = {
         theme: {
@@ -129,9 +130,20 @@
 </head>
 
 <body class="bg-gray-50">
+    <?php
+        if (isset($_GET['updated'])) {
+            echo "<script>
+                Swal.fire({
+                    title: 'Account Updated Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            </script>";
+        }
+        ?>
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
@@ -239,6 +251,13 @@
                             <label class="block text-gray-700 text-sm mb-1">Email</label>
                             <input type="email" placeholder="Enter email" name="email"
                                 value="<?php echo $rowUser -> email ?>"
+                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
+                        </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm mb-1">Password</label>
+                            <input type="password" placeholder="Enter Password" name="pass" required
+                                value=""
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
                         </div>
                         

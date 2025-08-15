@@ -5,11 +5,7 @@
     } 
     include_once '../inc/database.php';
 
-      $sqlRecent = 'SELECT socialorder.id AS orderId, socialorder.*, service.* FROM socialorder
-     INNER JOIN service ON socialorder.serviceId = service.id  LIMIT 4';        
-    $stmtRecent = $pdo->prepare($sqlRecent);
-    $stmtRecent->execute();
-    $rows = $stmtRecent->fetchAll();
+ 
 
 
     // Fetch orders
@@ -213,7 +209,7 @@
         ?>
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
@@ -605,81 +601,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div class="p-5 border-b border-gray-100">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-800">Recent Orders</h3>
-                            <button class="text-sm text-purple-600 hover:text-purple-800 font-medium"
-                                onclick="event.stopPropagation();window.location.href='order-history'">
-                                View All <i class="fas fa-chevron-right ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="divide-y divide-gray-100">
-                        <?php foreach($rows as $row): ?>
-                        <!-- Order  -->
-                        <div class="order-card p-5 hover:bg-gray-50 transition duration-200">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                                <div class="flex items-start space-x-4">
-                                    <div
-                                        class="platform-icon <?php echo $row -> iconBg ?> <?php echo $row -> iconColour ?>">
-                                        <i class="<?php echo $row -> icon ?>"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-800"><?php echo $row -> title ?></h4>
-                                        <p class="text-sm text-gray-500">Order #<?php echo $row -> orderId ?></p>
-                                        <p class="text-xs text-gray-400 mt-1">Placed on <?php 
-
-                                        $timestamp = $row -> orderDate;
-                                            $date = new DateTime($timestamp);
-                                            $formatted = $date->format('d, M Y');
-
-                                            echo $formatted;
-
-                                        
-                                        
-                                        ?></p>
-                                    </div>
-                                </div>
-                                <div class="mt-4 md:mt-0 flex flex-col md:items-end">
-
-                                    <?php
-                                    $status = $row -> status;
-                                    $bg = '';
-                                    $colour = '';
-                                    $count = ($row -> quantity) - ($row -> orderCountTrack);
-                                    $percentage = ($count / $row -> quantity) * 100;
-
-                                    if ($status == 'Completed') {
-                                        $bg = 'bg-green-100';
-                                        $colour = 'text-green-800';
-                                    }
-                                    elseif ($status == 'In Progress') {
-                                        $bg = 'bg-yellow-100';
-                                        $colour = 'text-yellow-800';
-                                    } else {
-                                        $bg = 'bg-red-100';
-                                        $colour = 'text-red-800';
-                                    }   
-
-                                    
-                                    ?>
-                                    <span
-                                        class="px-3 py-1 rounded-full text-xs font-medium <?php echo $bg ?> <?php echo $colour ?>"><?php echo $status ?></span>
-                                    <p class="text-sm text-gray-500 mt-2"><?php echo $count ?> out of
-                                        <?php echo $row -> quantity ?> delivered</p>
-                                    <div class="flex items-center mt-1">
-
-                                        <span
-                                            class="ml-2 text-xs text-gray-500"><?php echo number_format($percentage, 0) ?>%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <?php endforeach?>
-                    </div>
-                </div>
+                
 
 
 
@@ -839,17 +761,33 @@
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Yes, delete it",
-                    cancelButtonText: "Cancel"
+                    confirmButtonText: "Yes, delete it"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.rows = this.rows.filter(r => r.id !== id);
-                        this.filterRows();
-                        Swal.fire("Deleted!", "The order has been removed.", "success");
-                        // TODO: also delete from server via AJAX
+                        fetch('delete-service.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: 'id=' + encodeURIComponent(id)
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    this.rows = this.rows.filter(r => r.id !== id); // remove from table
+                                    this.filterRows();
+                                    Swal.fire("Deleted!", "The order has been deleted.", "success");
+                                } else {
+                                    Swal.fire("Error", data.message || "Could not delete order.", "error");
+                                }
+                            })
+                            .catch(() => {
+                                Swal.fire("Error", "Could not contact server.", "error");
+                            });
                     }
                 });
             }
+
 
 
         }

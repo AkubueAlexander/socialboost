@@ -23,17 +23,17 @@
         $userName = $_POST['userName'];
         $fullName = $_POST['fullName'];
         $email = $_POST['email'];    
-        $userType = $_POST['socialUrl'];
+        $userType = $_POST['userType'];
         $phone = $_POST['phone'];    
-        $status = $_POST['status'];     
+        $verifiedStatus = $_POST['verifiedStatus'];     
         
     
-        $update_sql = 'UPDATE user SET userName = :userName,status = :status,fullName = :fullName,email = :email,
+        $update_sql = 'UPDATE user SET userName = :userName,verifiedStatus = :verifiedStatus,fullName = :fullName,email = :email,
         userType = :userType,userType = :userType,phone = :phone
         Where id = :id ';
         $update = $pdo->prepare($update_sql);        
         $update->execute(['userName' => $userName,'phone' => $phone,
-        'status' => $status,'fullName' => $fullName,'email' => $email,'userType' => $userType,'id' => $id]);
+        'verifiedStatus' => $verifiedStatus,'fullName' => $fullName,'email' => $email,'userType' => $userType,'id' => $id]);
         
     
         echo '<script>
@@ -173,7 +173,7 @@
         ?>
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
@@ -340,7 +340,7 @@
                                     <button @click="modalOpen=false"
                                         class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
                                 </div>
-
+                            <form action="" method="post">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- ID (always read-only) -->
                                     <div>
@@ -348,12 +348,13 @@
                                         <input type="text" x-model="modalData.id"
                                             class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
                                             readonly>
+                                            <input type="hidden" name="id" x-model="modalData.id">
                                     </div>
 
                                     <!-- Full Name -->
                                     <div>
                                         <label class="block text-sm font-medium mb-1">Full Name</label>
-                                        <input type="text" x-model="modalData.fullName"
+                                        <input type="text" x-model="modalData.fullName" name="fullName"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
@@ -361,7 +362,7 @@
                                     <!-- User Name -->
                                     <div>
                                         <label class="block text-sm font-medium mb-1">User Name</label>
-                                        <input type="text" x-model="modalData.userName"
+                                        <input type="text" x-model="modalData.userName" name="userName"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
@@ -369,7 +370,7 @@
                                     <!-- Email -->
                                     <div>
                                         <label class="block text-sm font-medium mb-1">Email</label>
-                                        <input type="email" step="0.01" x-model.number="modalData.email"
+                                        <input type="email" step="0.01" x-model="modalData.email" name="email"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
@@ -377,7 +378,7 @@
                                     <!-- User Type -->
                                     <div>
                                         <label class="block text-sm font-medium mb-1">User Type</label>
-                                        <input type="text" min="0" x-model.number="modalData.userType"
+                                        <input type="text"  x-model="modalData.userType" name="userType"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
@@ -387,7 +388,7 @@
                                     <!-- Phone -->
                                     <div>
                                         <label class="block text-sm font-medium mb-1">Phone</label>
-                                        <input type="phone" x-model="modalData.phone"
+                                        <input type="phone" x-model="modalData.phone" name="phone"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
@@ -395,7 +396,7 @@
                                    <!-- Verified Status -->
                                     <div >
                                         <label class="block text-sm font-medium mb-1">Verified Status</label>
-                                        <input type="text" x-model="modalData.verifiedStatus"
+                                        <input type="number" x-model.number="modalData.verifiedStatus" name="verifiedStatus"
                                             class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                             :class="!isEditing ? 'bg-gray-50' : ''">
                                     </div>
@@ -405,11 +406,12 @@
 
                                 <div class="flex justify-end gap-2 mt-6">
                                     <button @click="modalOpen=false" class="px-4 py-2 rounded-lg border">Close</button>
-                                    <button x-show="isEditing" @click="saveEdit()"
+                                    <button type="submit" x-show="isEditing" @click="saveEdit()" name="edit"
                                         class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
                                         Save
                                     </button>
                                 </div>
+                            </form>
                             </div>
                         </div>
 
@@ -566,17 +568,33 @@
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Yes, delete it",
-                    cancelButtonText: "Cancel"
+                    confirmButtonText: "Yes, delete it"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.rows = this.rows.filter(r => r.id !== id);
-                        this.filterRows();
-                        Swal.fire("Deleted!", "The order has been removed.", "success");
-                        // TODO: also delete from server via AJAX
+                        fetch('delete-user.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: 'id=' + encodeURIComponent(id)
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    this.rows = this.rows.filter(r => r.id !== id); // remove from table
+                                    this.filterRows();
+                                    Swal.fire("Deleted!", "The order has been deleted.", "success");
+                                } else {
+                                    Swal.fire("Error", data.message || "Could not delete order.", "error");
+                                }
+                            })
+                            .catch(() => {
+                                Swal.fire("Error", "Could not contact server.", "error");
+                            });
                     }
                 });
             }
+
 
 
         }

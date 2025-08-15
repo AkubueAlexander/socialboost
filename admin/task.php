@@ -184,7 +184,7 @@
         ?>
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
@@ -696,17 +696,33 @@
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Yes, delete it",
-                    cancelButtonText: "Cancel"
+                    confirmButtonText: "Yes, delete it"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.rows = this.rows.filter(r => r.id !== id);
-                        this.filterRows();
-                        Swal.fire("Deleted!", "The order has been removed.", "success");
-                        // TODO: also delete from server via AJAX
+                        fetch('delete-task.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: 'id=' + encodeURIComponent(id)
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    this.rows = this.rows.filter(r => r.id !== id); // remove from table
+                                    this.filterRows();
+                                    Swal.fire("Deleted!", "The order has been deleted.", "success");
+                                } else {
+                                    Swal.fire("Error", data.message || "Could not delete order.", "error");
+                                }
+                            })
+                            .catch(() => {
+                                Swal.fire("Error", "Could not contact server.", "error");
+                            });
                     }
                 });
             }
+
 
 
         }

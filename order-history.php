@@ -113,7 +113,7 @@
 
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
