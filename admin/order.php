@@ -22,6 +22,37 @@
     $stmt->execute();
     $rowsOrder = $stmt->fetchAll();
 
+
+    if (isset($_POST['edit'])) {
+
+        $input = $_POST['orderDate']; 
+        $time = "13:19:52";  
+        $datetime = strtotime($input . ' ' . $time);
+        $mysqlTimestamp = date("Y-m-d H:i:s", $datetime);
+
+        $id = $_POST['id'];               
+        $amountSpent = $_POST['amountSpent'];
+        $status = $_POST['status'];
+        $quantity = $_POST['quantity'];    
+        $socialUrl = $_POST['socialUrl'];
+        $orderDate = $mysqlTimestamp;      
+        
+    
+        $update_sql = 'UPDATE socialorder SET amountSpent = :amountSpent,status = :status,quantity = :quantity,socialUrl = :socialUrl,orderDate = :orderDate
+        Where id = :id ';
+        $update = $pdo->prepare($update_sql);        
+        $update->execute(['amountSpent' => $amountSpent,
+        'status' => $status,'socialUrl' => $socialUrl,'orderDate' => $orderDate,'quantity' => $quantity,'id' => $id]);
+        
+    
+        echo '<script>
+                    setTimeout(function() {
+                    window.location.href = "order?updated=true";
+                    }, 200);
+                    </script>';
+    
+}
+
     
     
 
@@ -137,6 +168,17 @@
 </head>
 
 <body class="bg-gray-50">
+    <?php
+        if (isset($_GET['updated'])) {
+            echo "<script>
+                Swal.fire({
+                    title: 'Order Updated Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            </script>";
+        }
+        ?>
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
@@ -282,7 +324,7 @@
                                                 x-text="row.socialurl"></a>
                                         </td>
                                         <td class="px-4 py-2" x-text="row.date"></td>
-                                        
+
                                         <td class="border border-gray-300 p-2 flex gap-2">
                                             <button @click="showModal(row, false)"
                                                 class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
@@ -314,91 +356,95 @@
                                     <button @click="modalOpen=false"
                                         class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
                                 </div>
+                                <form action="" method="post">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <!-- ID (always read-only) -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">ID</label>
+                                            <input type="text" x-model="modalData.id"
+                                                class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
+                                                readonly>
+                                            <input type="hidden" name="id" x-model="modalData.id">
+                                        </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- ID (always read-only) -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">ID</label>
-                                        <input type="text" x-model="modalData.id"
-                                            class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
-                                            readonly>
+                                        <!-- Name -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Name</label>
+                                            <input type="text" x-model="modalData.fullName"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+                                        <!-- Title -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Title</label>
+                                            <input type="text" x-model="modalData.title"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+                                        <!-- Price -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Price</label>
+                                            <input type="number" step="0.01" x-model.number="modalData.amountValue"
+                                                name="amountSpent" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+                                        <!-- Quantity -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Quantity</label>
+                                            <input type="number" min="0" x-model.number="modalData.quantity"
+                                                name="quantity" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+                                        <!-- Status -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Status</label>
+                                            <select x-model="modalData.status" class="w-full border rounded-lg p-2"
+                                                name="status" :disabled="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                                <template x-for="s in statuses" :key="s">
+                                                    <option :value="s" x-text="s"></option>
+                                                </template>
+                                            </select>
+                                        </div>
+
+                                        <!-- Social URL -->
+                                        <div class="md:col-span-2">
+                                            <label class="block text-sm font-medium mb-1">Social URL</label>
+                                            <input type="url" x-model="modalData.socialurl" name="socialUrl"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+                                        <!-- Date -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Date</label>
+                                            <input type="date" x-model="modalData.dateISO" name="orderDate"
+                                                class="w-full border rounded-lg p-2" :disabled="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+                                        <!-- Pretty date (read-only display) -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Formatted Date</label>
+                                            <input type="text"
+                                                class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
+                                                :value="formatDisplayDate(modalData.dateISO)" readonly>
+                                        </div>
                                     </div>
 
-                                    <!-- Name -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Name</label>
-                                        <input type="text" x-model="modalData.fullName"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
+                                    <div class="flex justify-end gap-2 mt-6">
+                                        <button @click="modalOpen=false"
+                                            class="px-4 py-2 rounded-lg border">Close</button>
+                                        <button type="submit" x-show="isEditing" @click="saveEdit()" name="edit"
+                                            class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
+                                            Update
+                                        </button>
                                     </div>
-
-                                    <!-- Title -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Title</label>
-                                        <input type="text" x-model="modalData.title"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-                                    <!-- Price -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Price</label>
-                                        <input type="number" step="0.01" x-model.number="modalData.amountValue"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-                                    <!-- Quantity -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Quantity</label>
-                                        <input type="number" min="0" x-model.number="modalData.quantity"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-                                    <!-- Status -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Status</label>
-                                        <select x-model="modalData.status" class="w-full border rounded-lg p-2"
-                                            :disabled="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                            <template x-for="s in statuses" :key="s">
-                                                <option :value="s" x-text="s"></option>
-                                            </template>
-                                        </select>
-                                    </div>
-
-                                    <!-- Social URL -->
-                                    <div class="md:col-span-2">
-                                        <label class="block text-sm font-medium mb-1">Social URL</label>
-                                        <input type="url" x-model="modalData.socialurl"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-                                    <!-- Date -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Date</label>
-                                        <input type="date" x-model="modalData.dateISO"
-                                            class="w-full border rounded-lg p-2" :disabled="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-                                    <!-- Pretty date (read-only display) -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Formatted Date</label>
-                                        <input type="text"
-                                            class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
-                                            :value="formatDisplayDate(modalData.dateISO)" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="flex justify-end gap-2 mt-6">
-                                    <button @click="modalOpen=false" class="px-4 py-2 rounded-lg border">Close</button>
-                                    <button x-show="isEditing" @click="saveEdit()"
-                                        class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
-                                        Save
-                                    </button>
-                                </div>
+                                </form>
                             </div>
                         </div>
 

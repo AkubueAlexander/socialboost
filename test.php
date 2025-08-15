@@ -1,3 +1,33 @@
+<?php
+
+      
+if (isset($_POST['edit_users'])) {
+   $first_name = $_POST['first_name'];
+   $last_name = $_POST['last_name'];            
+   $phone = $_POST['phone'];
+   $user_id = $_POST['user_id'];
+
+   
+
+   $update_sql = 'UPDATE user SET first_name = :first_name,last_name = :last_name,
+   phone = :phone
+    Where id = :id LIMIT 1';
+    $update = $pdo->prepare($update_sql);        
+    $update->execute(['first_name' => $first_name,'last_name' => $last_name,
+    'phone' => $phone, 'id' => $user_id]);
+    
+  
+    echo '<script>
+                setTimeout(function() {
+                window.location.href = "users?updated=true";
+                }, 200);
+                </script>';
+    
+}
+
+?>
+
+
 <script>
 const ordersFromPHP = <?php echo json_encode($rowsOrder, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
@@ -132,6 +162,8 @@ function orderTable() {
                     this.filterRows();
                     Swal.fire("Deleted!", "The order has been removed.", "success");
                     // TODO: also delete from server via AJAX
+
+                    alert(id)
                 }
             });
         }

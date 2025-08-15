@@ -18,6 +18,60 @@
     $stmt->execute();
     $rowsService = $stmt->fetchAll();
 
+
+      if (isset($_POST['edit'])) {       
+
+        $id = $_POST['id'];               
+        $title = $_POST['title'];
+        $advDes = $_POST['advDes'];
+        $earnerDes = $_POST['earnerDes'];    
+        $advPrice = $_POST['advPrice'];
+        $earnerPrice = $_POST['earnerPrice'];
+        $per = $_POST['per'];
+        $platform = $_POST['platform'];    
+        $imgUrl = $_POST['imgUrl'];
+        $imgBg = $_POST['imgBg'];               
+        $icon = $_POST['icon'];
+        $iconColour = $_POST['iconColour'];
+        $iconBg = $_POST['iconBg'];
+        $rating = $_POST['rating'];    
+        $ratingCount = $_POST['ratingCount'];
+        $platformBg = $_POST['platformBg'];
+        $platformColour = $_POST['platformColour'];
+        $highLight = $_POST['highLight'];    
+        $highLightColour = $_POST['highLightColour'];
+        $highLightBg = $_POST['highLightBg'];               
+        $category = $_POST['category'];
+     
+             
+        
+    
+        $update_sql = 'UPDATE service SET title = :title,advDes = :advDes,earnerDes = :earnerDes,
+        advPrice = :advPrice,earnerPrice = :earnerPrice,per = :per,platform = :platform,imgUrl = :imgUrl,
+        imgBg = :imgBg,icon = :icon,iconColour = :iconColour,iconBg = :iconBg,rating = :rating,ratingCount = :ratingCount,
+        platformBg = :platformBg,platformColour = :platformColour,highLight = :highLight,highLightColour = :highLightColour,highLightBg = :highLightBg,
+        category = :category
+
+        Where id = :id ';
+        $update = $pdo->prepare($update_sql);        
+        $update->execute(['title' => $title,
+        'advDes' => $advDes,'earnerDes' => $earnerDes,'advPrice' => $advPrice,'earnerPrice' => $earnerPrice,'per' => $per
+    ,
+        'platform' => $platform,'imgUrl' => $imgUrl,'imgBg' => $imgBg,'icon' => $icon,'iconColour' => $iconColour,'iconBg' => $iconBg
+    ,
+        'rating' => $rating,'ratingCount' => $ratingCount,'platformBg' => $platformBg,'platformColour' => $platformColour,'highLight' => $highLight
+    ,
+        'highLightColour' => $highLightColour,'highLightBg' => $highLightBg,'category' => $category,'id' => $id]);
+        
+    
+        echo '<script>
+                    setTimeout(function() {
+                    window.location.href = "service?updated=true";
+                    }, 200);
+                    </script>';
+    
+}
+
     
 
     
@@ -135,6 +189,28 @@
 </head>
 
 <body class="bg-gray-50">
+    <?php
+        if (isset($_GET['updated'])) {
+            echo "<script>
+                Swal.fire({
+                    title: 'Service Updated Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            </script>";
+        }
+        ?>
+         <?php
+        if (isset($_GET['created'])) {
+            echo "<script>
+                Swal.fire({
+                    title: 'Service Inserted Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            </script>";
+        }
+        ?>
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
@@ -237,15 +313,15 @@
 
             <!-- Main content area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
-                
+
 
 
                 <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="serviceTable()" x-init="init()">
                     <div class="flex justify-end mb-4">
-                    <button class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">
-                        Create
-                    </button>
-                </div>
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded" onclick="window.location.href='create-service';">
+                            Create
+                        </button>
+                    </div>
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
                         <h1 class="text-xl font-semibold text-gray-800">Service</h1>
                         <input type="text" placeholder="Search..."
@@ -342,152 +418,169 @@
                                     <button @click="modalOpen=false"
                                         class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
                                 </div>
+                                <form action="" method="post">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <!-- ID (always read-only) -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">ID</label>
+                                            <input type="text" x-model="modalData.id" 
+                                                class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
+                                                readonly>
+                                            <input type="hidden" name="id" x-model="modalData.id">
+                                        </div>
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- ID (always read-only) -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">ID</label>
-                                        <input type="text" x-model="modalData.id" name="id"
-                                            class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
-                                            readonly>
-                                    </div>
-
-                                    <!-- Title -->
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Title</label>
-                                        <input type="text" x-model="modalData.title" name="title" placeholder="Title"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Advertiser Description</label>
-                                        <texarea class="md:col-span-2" type="text" x-model="modalData.advDes"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''" name="advDes"
-                                            placeholder="Advertiser Description"> </textarea>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Earner Description</label>
-                                        <texarea class="md:col-span-2" type="text" x-model="modalData.earnerDes"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''" name="earnerDes"
-                                            placeholder="Earner Description"> </textarea>
-                                    </div>
+                                        <!-- Title -->
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Title</label>
+                                            <input type="text" x-model="modalData.title" name="title"
+                                                placeholder="Title" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
 
 
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Per(Count)</label>
-                                        <input type="number" x-model="modalData.per" name="per"
-                                            class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                            :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Advertiser Description</label>
+                                            <textarea class="md:col-span-2" type="text" x-model="modalData.advDes"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''" name="advDes"
+                                                placeholder="Advertiser Description"> </textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Earner Description</label>
+                                            <textarea class="md:col-span-2" type="text" x-model="modalData.earnerDes"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''" name="earnerDes"
+                                                placeholder="Earner Description"> </textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Advertiser Price</label>
+                                            <input type="number" step="0.01" x-model.number="modalData.advPrice" name="advPrice"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Earner Price</label>
+                                            <input type="number" step="0.01" x-model.number="modalData.earnerPrice" name="earnerPrice"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
 
 
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Platform</label>
-                                        <input type="text" x-model="modalData.platform" name="platform"
-                                            placeholder="e.g Apple" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Per(Count)</label>
+                                            <input type="number" x-model.number="modalData.per" name="per"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
 
 
-
-
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Image Url</label>
-                                        <input type="phone" x-model="modalData.imgUrl" name="imgUrl"
-                                            placeholder="e.g https://image.png" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Image Background</label>
-                                        <input type="text" x-model="modalData.imgBg" name="imgBg"
-                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Icon</label>
-                                        <input type="text" x-model="modalData.icon" name="icon"
-                                            placeholder="e.g fas fa-apple" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Icon Background</label>
-                                        <input type="text" x-model="modalData.iconBg" name="iconBg"
-                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Icon Colour</label>
-                                        <input type="text" x-model="modalData.iconColour" name="iconColour"
-                                            placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Rating</label>
-                                        <input type="text" x-model="modalData.rating" name="rating"
-                                            placeholder="e.g 4.5" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Rating Count</label>
-                                        <input type="text" x-model="modalData.ratingCount" name="ratingCount"
-                                            placeholder="e.g 1500" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Platform Background</label>
-                                        <input type="text" x-model="modalData.platformBg" name="platformBg"
-                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Platform Colour</label>
-                                        <input type="text" x-model="modalData.platformColour" name="platformColour"
-                                            placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Highlight</label>
-                                        <input type="text" x-model="modalData.highLight" name="highLight"
-                                            placeholder="e.g New" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Highlight Colour</label>
-                                        <input type="text" x-model="modalData.highLightColour" name="highLightColour"
-                                            placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Highlight Background</label>
-                                        <input type="text" x-model="modalData.highLightBg" name="highLightBg"
-                                            placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Category</label>
-                                        <input type="text" x-model="modalData.category" name="category"
-                                            placeholder="e.g Followers | Reviews" class="w-full border rounded-lg p-2"
-                                            :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                    </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Platform</label>
+                                            <input type="text" x-model="modalData.platform" name="platform"
+                                                placeholder="e.g Apple" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
 
 
 
-                                </div>
 
-                                <div class="flex justify-end gap-2 mt-6">
-                                    <button @click="modalOpen=false" class="px-4 py-2 rounded-lg border">Close</button>
-                                    <button x-show="isEditing" @click="saveEdit()" type="submit" name="editSubmit"
-                                        class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
-                                        Save
-                                    </button>
-                                </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Image Url</label>
+                                            <input type="phone" x-model="modalData.imgUrl" name="imgUrl"
+                                                placeholder="e.g https://image.png" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Image Background</label>
+                                            <input type="text" x-model="modalData.imgBg" name="imgBg"
+                                                placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Icon</label>
+                                            <input type="text" x-model="modalData.icon" name="icon"
+                                                placeholder="e.g fas fa-apple" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Icon Background</label>
+                                            <input type="text" x-model="modalData.iconBg" name="iconBg"
+                                                placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Icon Colour</label>
+                                            <input type="text" x-model="modalData.iconColour" name="iconColour"
+                                                placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Rating</label>
+                                            <input type="number" step="0.01" x-model.number="modalData.rating" name="rating"
+                                                placeholder="e.g 4.5" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Rating Count</label>
+                                            <input type="number" x-model.number="modalData.ratingCount" name="ratingCount"
+                                                placeholder="e.g 1500" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Platform Background</label>
+                                            <input type="text" x-model="modalData.platformBg" name="platformBg"
+                                                placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Platform Colour</label>
+                                            <input type="text" x-model="modalData.platformColour" name="platformColour"
+                                                placeholder="e.g text-red-500" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Highlight</label>
+                                            <input type="text" x-model="modalData.highLight" name="highLight"
+                                                placeholder="e.g New" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Highlight Colour</label>
+                                            <input type="text" x-model="modalData.highLightColour"
+                                                name="highLightColour" placeholder="e.g text-red-500"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Highlight Background</label>
+                                            <input type="text" x-model="modalData.highLightBg" name="highLightBg"
+                                                placeholder="e.g bg-red-100" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-1">Category</label>
+                                            <input type="text" x-model="modalData.category" name="category"
+                                                placeholder="e.g Followers | Reviews"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="flex justify-end gap-2 mt-6">
+                                        <button @click="modalOpen=false"
+                                            class="px-4 py-2 rounded-lg border">Close</button>
+                                        <button type="submit" x-show="isEditing"   name="edit"
+                                            class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
+                                            Update
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
@@ -707,11 +800,6 @@
                     // update the row with modal data
                     this.rows[i] = {
                         ...this.rows[i],
-                        title: this.modalData.title,
-                        advDes: this.modalData.advDes,
-                        earnerDes: this.modalData.earnerDes,
-                        advPrice: this.modalData.advPrice,
-                        per: this.modalData.per,
                         title: this.modalData.title,
                         advDes: this.modalData.advDes,
                         earnerDes: this.modalData.earnerDes,
