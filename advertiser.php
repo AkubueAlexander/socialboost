@@ -300,9 +300,9 @@
                 </div>
 
                 <!-- Charts and recent orders -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div class=" gap-6 mb-6">
                     <!-- Order distribution chart -->
-                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-5">
+                    <!-- <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-5">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-semibold text-gray-800">Order Distribution</h3>
                             <select
@@ -315,7 +315,7 @@
                         <div class="chart-container">
                             <canvas id="orderChart"></canvas>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Platform distribution -->
                     <div class="bg-white rounded-xl shadow-sm p-5">

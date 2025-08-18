@@ -273,11 +273,7 @@ if (isset($_POST['submit'])) {
                             <i class="fas fa-wallet"></i>
                             <span>Earnings</span>
                         </a>
-                        <a href="analytics"
-                            class="flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Analytics</span>
-                        </a>
+                       
                         <a href="earner-settings"
                             class="flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary">
                             <i class="fas fa-cog"></i>
@@ -520,56 +516,7 @@ if (isset($_POST['submit'])) {
 
                 </div>
 
-                <!-- Charts & Recent Tasks -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-                    <!-- Performance Chart -->
-                    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <div class="flex items-center justify-between">
-                            <h3 class="font-bold text-dark">Task Performance</h3>
-                            <div class="flex space-x-2">
-                                <button class="px-3 py-1 text-xs bg-primary/10 text-primary rounded-lg">Week</button>
-                                <button
-                                    class="px-3 py-1 text-xs text-gray-500 hover:bg-primary/10 hover:text-primary rounded-lg">Month</button>
-                                <button
-                                    class="px-3 py-1 text-xs text-gray-500 hover:bg-primary/10 hover:text-primary rounded-lg">Year</button>
-                            </div>
-                        </div>
-                        <div class="chart-container mt-4">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Task Distribution -->
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h3 class="font-bold text-dark">Task Distribution</h3>
-                        <div class="chart-container mt-4">
-                            <canvas id="taskDistributionChart"></canvas>
-                        </div>
-                        <div class="mt-4 space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-3 h-3 rounded-full bg-primary"></div>
-                                    <span class="text-sm text-gray-600">Social Media</span>
-                                </div>
-                                <span class="text-sm font-medium">62%</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-3 h-3 rounded-full bg-accent"></div>
-                                    <span class="text-sm text-gray-600">Reviews</span>
-                                </div>
-                                <span class="text-sm font-medium">23%</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                    <span class="text-sm text-gray-600">Other</span>
-                                </div>
-                                <span class="text-sm font-medium">15%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <!-- Recent Tasks -->
                 <div class="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

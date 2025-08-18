@@ -195,10 +195,7 @@
                             <i class="fas fa-wallet"></i>
                             <span>Earnings</span>
                         </a>
-                        <a href="analytics" class="flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Analytics</span>
-                        </a>
+                        
                         <a href="earner-settings" class="flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary">
                             <i class="fas fa-cog"></i>
                             <span>Settings</span>

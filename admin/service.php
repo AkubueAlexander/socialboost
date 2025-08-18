@@ -409,7 +409,7 @@
                                 class="bg-white w-[95%] max-w-2xl rounded-xl shadow-lg p-6  max-h-[90vh] overflow-y-auto">
                                 <div class="flex items-center justify-between mb-4">
                                     <h2 class="text-lg font-semibold"
-                                        x-text="isEditing ? 'Edit Order' : 'View Service'">
+                                        x-text="isEditing ? 'Edit Service' : 'View Service'">
                                     </h2>
                                     <button @click="modalOpen=false"
                                         class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
@@ -776,7 +776,7 @@
                                 if (data.success) {
                                     this.rows = this.rows.filter(r => r.id !== id); // remove from table
                                     this.filterRows();
-                                    Swal.fire("Deleted!", "The order has been deleted.", "success");
+                                    Swal.fire("Deleted!", "The service has been deleted.", "success");
                                 } else {
                                     Swal.fire("Error", data.message || "Could not delete order.", "error");
                                 }

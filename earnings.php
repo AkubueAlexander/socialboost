@@ -30,16 +30,18 @@
         
 
 
-     if (isset($_POST['submit'])) {
-
+   if (isset($_POST['submit'])) {
+      $balance = $rowWallet -> balance;
+      $bankCode = $rowWallet -> bankCode; // Example test bank code (Get from GET /v3/banks/US)
+      $accountNumber = $rowWallet -> accountNumber; 
+      $amount = $_POST['amount'];
+       
+      if ($amount <= $balance) {
         
-
-        $secretKey = "FLWSECK_TEST-c239aaf7c99ab1fa37b71a622e528ca4-X"; // <-- Replace with your TEST secret key
+          $secretKey = "FLWSECK_TEST-c239aaf7c99ab1fa37b71a622e528ca4-X"; // <-- Replace with your TEST secret key
 
         // ==== 2. Beneficiary Details ====
-        $bankCode = $rowWallet -> bankCode; // Example test bank code (Get from GET /v3/banks/US)
-        $accountNumber = $rowWallet -> accountNumber; 
-        $amount = $_POST['amount'];
+        
         $currency = "USD";
         $narration = "Test USD withdrawal from my platform"; 
         $reference = "txn_" . time(); // Unique transaction reference for tracking
@@ -79,7 +81,7 @@
 
         $response = curl_exec($ch);  // Execute request
         $err = curl_error($ch);      // Capture any cURL errors
-        curl_close($ch);             // Close cURL session
+        curl_close($ch);   
 
         // ==== 6. Handle Response ====
         if ($err) {
@@ -96,6 +98,21 @@
                 echo " Transfer failed: " . $result['message'];
             }
         }
+        
+        
+        
+        // Close cURL session
+      }
+       else {
+        header('Location: earnings?error?insufficient Fund');
+      }
+        
+
+        
+
+      
+
+        
 
 
     }
@@ -256,7 +273,8 @@
                     <div class="mt-10">
                         <div class="flex items-center space-x-4 p-3 bg-primary/10 rounded-lg ml-auto">
                             <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white">
-                                <span class="text-xl font-semibold"><?php echo getInitials($rowUser -> fullName) ?></span>
+                                <span
+                                    class="text-xl font-semibold"><?php echo getInitials($rowUser -> fullName) ?></span>
                             </div>
                             <div>
                                 <p class="font-medium text-dark"><?php echo $rowUser -> fullName ?></p>
@@ -281,11 +299,7 @@
                             <i class="fas fa-wallet"></i>
                             <span>Earnings</span>
                         </a>
-                        <a href="analytics"
-                            class="flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Analytics</span>
-                        </a>
+
                         <a href="earner-settings"
                             class="flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary">
                             <i class="fas fa-cog"></i>
@@ -300,7 +314,9 @@
                 </nav>
             </div>
             <div class="absolute bottom-0 left-0 right-0 p-6">
-                <button class="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary" onclick="window.location.href='logout';">
+                <button
+                    class="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary"
+                    onclick="window.location.href='logout';">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </button>
@@ -335,7 +351,7 @@
                         </div>
                         <button
                             class="w-10 h-10 rounded-full bg-gray-100 text-primary flex items-center justify-center">
-                           <?php echo getInitials($rowUser -> fullName) ?>
+                            <?php echo getInitials($rowUser -> fullName) ?>
                         </button>
                     </div>
                 </div>
@@ -354,15 +370,16 @@
                         <!-- Balance -->
                         <div class="mb-6 text-center">
                             <p class="text-sm text-gray-500">Available Balance</p>
-                            <h1 class="text-4xl font-bold text-secondary mt-1">$<?php echo number_format($rowWallet -> balance, 2)  ?></h1>
+                            <h1 class="text-4xl font-bold text-secondary mt-1">
+                                $<?php echo number_format($rowWallet -> balance, 2)  ?></h1>
                         </div>
 
-                       <div class="flex items-center justify-center space-x-4">
-                         <button type="submit" id="openFundModal"
-                            class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md">
-                            Withdraw
-                        </button>
-                       </div>
+                        <div class="flex items-center justify-center space-x-4">
+                            <button type="submit" id="openFundModal"
+                                class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md">
+                                Withdraw
+                            </button>
+                        </div>
 
 
 
@@ -370,45 +387,44 @@
 
                     </div>
                 </div>
-                
+
                 <!-- Modal Overlay -->
-                        <div id="fundModal"
-                            class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-                            <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6 relative animate-fadeIn">
-                                <!-- Close button -->
-                                <button id="closeFundModal"
-                                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                                    <i class="fas fa-times text-xl"></i>
-                                </button>
+                <div id="fundModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6 relative animate-fadeIn">
+                        <!-- Close button -->
+                        <button id="closeFundModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
 
-                                <!-- Modal Title -->
-                                <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Withdraw</h2>
+                        <!-- Modal Title -->
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Withdraw</h2>
 
-                                <!-- Form -->
-                                <form action="" method="POST" class="space-y-4">
-                                    <div>
-                                        <label for="amount" class="block text-sm font-medium text-gray-700">Amount
-                                            ($)</label>
-                                        <input type="number" name="amount" id="amount" required 
-                                            class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-3">
-                                    </div>
-
-                                    <!-- Buttons -->
-                                    <div class="flex justify-end space-x-3 pt-4">
-                                        <button type="button" id="cancelFundModal"
-                                            class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium">
-                                            Cancel
-                                        </button>
-                                        <button type="submit" name="submit"
-                                            class="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium">
-                                            Submit
-                                        </button>
-                                    </div>
-                                </form>
+                        <!-- Form -->
+                        <form action="" method="POST" class="space-y-4">
+                            <div>
+                                <label for="amount" class="block text-sm font-medium text-gray-700">Amount
+                                    ($)</label>
+                                <input type="number" name="amount" id="amount" required
+                                    class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-3">
                             </div>
-                        </div>
 
-               <!-- Recent Tasks -->
+                            <!-- Buttons -->
+                            <div class="flex justify-end space-x-3 pt-4">
+                                <button type="button" id="cancelFundModal"
+                                    class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium">
+                                    Cancel
+                                </button>
+                                <button type="submit" name="submit"
+                                    class="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Recent Tasks -->
                 <div class="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b border-gray-100">
                         <h3 class="font-bold text-dark">Recent Tasks</h3>
@@ -479,7 +495,7 @@
 
 
                     </div>
-                   
+
                 </div>
 
 

@@ -276,7 +276,7 @@
 
                 <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="userTable()" x-init="init()">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                        <h1 class="text-xl font-semibold text-gray-800">Order History</h1>
+                        <h1 class="text-xl font-semibold text-gray-800">All Users</h1>
                         <input type="text" placeholder="Search..."
                             class="w-full md:w-1/3 px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none"
                             x-model="search" @input="filterRows()" />
@@ -335,7 +335,7 @@
                             @keydown.escape.window="modalOpen=false" @click.self="modalOpen=false">
                             <div class="bg-white w-[95%] max-w-2xl rounded-xl shadow-lg p-6">
                                 <div class="flex items-center justify-between mb-4">
-                                    <h2 class="text-lg font-semibold" x-text="isEditing ? 'Edit Order' : 'View Order'">
+                                    <h2 class="text-lg font-semibold" x-text="isEditing ? 'Edit User' : 'View User'">
                                     </h2>
                                     <button @click="modalOpen=false"
                                         class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
@@ -583,7 +583,7 @@
                                 if (data.success) {
                                     this.rows = this.rows.filter(r => r.id !== id); // remove from table
                                     this.filterRows();
-                                    Swal.fire("Deleted!", "The order has been deleted.", "success");
+                                    Swal.fire("Deleted!", "The user has been deleted.", "success");
                                 } else {
                                     Swal.fire("Error", data.message || "Could not delete order.", "error");
                                 }
