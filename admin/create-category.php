@@ -14,42 +14,18 @@
 
 
     if (isset($_POST['submit'])) {
-    $title = trim($_POST['title']);    
-    $advDes = $_POST['advDes'];      
-    $earnerDes = trim($_POST['earnerDes']);       
-    $advPrice = $_POST['advPrice'];  
-    $earnerPrice = trim($_POST['earnerPrice']);
-    $per = trim($_POST['per']);
-    $platform = trim($_POST['platform']);
-    $platformBg = trim($_POST['platformBg']);
-    $platformColour = trim($_POST['platformColour']);
-    $imgUrl = trim($_POST['imgUrl']);
-    $imgBg = trim($_POST['imgBg']);
-    $icon = trim($_POST['icon']);
-    $iconBg = trim($_POST['iconBg']);
-    $iconColour = trim($_POST['iconColour']);
-    $rating = trim($_POST['rating']);
-    $ratingCount = trim($_POST['ratingCount']);
-    $highLight = trim($_POST['highLight']);
-    $highLightColour = trim($_POST['highLightColour']);
-    $highLightBg = trim($_POST['highLightBg']);
-    $categoryId = trim($_POST['categoryId']);
+    $name = trim($_POST['name']);    
+    $description = $_POST['description'];
+         
+    
 
 
-    $sql = 'INSERT INTO service (title, advDes, earnerDes,advPrice, earnerPrice,per, platform, platformBg, platformColour,
-     imgUrl, imgBg, icon, iconBg, iconColour, rating, ratingCount, highLight, highLightColour, highLightBg, categoryId) 
-    VALUES (:title,:advDes,:earnerDes,:advPrice,:earnerPrice,:per, :platform, :platformBg, :platformColour,
-     :imgUrl, :imgBg, :icon, :iconBg, :iconColour, :rating, :ratingCount, :highLight, :highLightColour, :highLightBg, :categoryId)';
+    $sql = 'INSERT INTO service (name, descriptions)';
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['title' => $title,'advDes' => $advDes,'earnerDes' => $earnerDes,'advPrice' => $advPrice,
-        'earnerPrice' => $earnerPrice,'per' => $per,'platform' => $platform,'platformBg' => $platformBg,
-        'platformColour' => $platformColour,'imgUrl' => $imgUrl,'imgBg' => $imgBg,'icon' => $icon,
-        'iconBg' => $iconBg,'iconColour' => $iconColour,'rating' => $rating,'ratingCount' => $ratingCount,
-        'highLight' => $highLight,'highLightColour' => $highLightColour,'highLightBg' => $highLightBg,
-        'categoryId' => $categoryId]);
+        $stmt->execute(['name' => $name,'advDes' => $advDes]);
         
 
-    header("Location: service?created=1");
+    header("Location: category?created=1");
 
     }
     

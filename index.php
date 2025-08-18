@@ -1,11 +1,18 @@
 <?php
     include_once 'inc/database.php';
 
-    $sql = 'SELECT * FROM service';
+    $sql = 'SELECT * FROM service
+    INNER JOIN category WHERE service.categoryId = category.id';
         
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $rows = $stmt->fetchAll();
+
+    $sqlCategory = 'SELECT * FROM category';
+        
+    $stmtCategory = $pdo->prepare($sqlCategory);
+    $stmtCategory->execute();
+    $rowsCategory = $stmtCategory->fetchAll();
 
 ?>
 
@@ -134,10 +141,11 @@
             
             <div class="flex flex-wrap justify-center gap-6 mb-8">
                 <button class="px-4 py-2 bg-primary text-white rounded-full font-medium" onclick="filterServices('all')">All Services</button>
-                <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium" onclick="filterServices('reviews')">App Reviews</button>
-                <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium" onclick="filterServices('followers')">Followers</button>
-                <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium" onclick="filterServices('likes')">Likes</button>
-                <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium" onclick="filterServices('views')">Views</button>
+                <?php foreach ($rowsCategory as $row):?>
+                <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full font-medium" onclick="filterServices('<?php echo $row -> name; ?>')">
+                    <?php echo $row -> description; ?></button>
+              
+                <?php endforeach?>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -145,7 +153,7 @@
                 <!-- Service Card -->
                  <?php foreach ($rows as $row):?>
                   
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 cursor-pointer" onclick="window.location.href='check-out?service=<?php echo $row -> title; ?>'" >
+                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 cursor-pointer" data-category="<?php echo strtolower($row->name); ?>" onclick="window.location.href='check-out?service=<?php echo $row -> title; ?>'" >
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <div class="<?php echo $row -> highLightBg; ?> <?php echo $row -> highLightColour; ?> px-3 py-1 rounded-full text-xs font-semibold"><?php echo $row -> highLight; ?></div>
@@ -178,11 +186,7 @@
                 
             </div>
             
-            <div class="text-center mt-12">
-                <button class="px-6 py-3 bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-md font-medium transition">
-                    View All Services (50+)
-                </button>
-            </div>
+            
         </div>
     </section>
 
@@ -370,7 +374,7 @@
             </div>
             
             <div class="pt-8 border-t border-gray-800 text-center text-gray-400">
-                <p>&copy; 2023 SocialBoost. All rights reserved.</p>
+                <p>&copy; 2025 SocialBoost. All rights reserved.</p>
             </div>
         </div>
     </footer>

@@ -5,49 +5,35 @@
     } 
     include_once '../inc/database.php';
 
-      $sqlRecent = 'SELECT socialorder.id AS orderId, socialorder.*, service.* FROM socialorder
-     INNER JOIN service ON socialorder.serviceId = service.id  LIMIT 4';        
-    $stmtRecent = $pdo->prepare($sqlRecent);
-    $stmtRecent->execute();
-    $rows = $stmtRecent->fetchAll();
+  
 
 
     // Fetch orders
-    $sql = 'SELECT socialorder.id AS orderId, socialorder.*, service.*,user.* 
-            FROM socialorder 
-            INNER JOIN service ON socialorder.serviceId = service.id            
-            INNER JOIN user ON socialorder.advId = user.id  
-            ORDER BY socialorder.orderDate DESC'; 
+    $sql = 'SELECT *  FROM category'; 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $rowsOrder = $stmt->fetchAll();
+    $rowsCategory = $stmt->fetchAll();
 
 
     if (isset($_POST['edit'])) {
 
-        $input = $_POST['orderDate']; 
-        $time = "13:19:52";  
-        $datetime = strtotime($input . ' ' . $time);
-        $mysqlTimestamp = date("Y-m-d H:i:s", $datetime);
+      
 
         $id = $_POST['id'];               
-        $amountSpent = $_POST['amountSpent'];
-        $status = $_POST['status'];
-        $quantity = $_POST['quantity'];    
-        $socialUrl = $_POST['socialUrl'];
-        $orderDate = $mysqlTimestamp;      
+        $name = $_POST['name'];
+        $description = $_POST['description'];
+         
         
     
-        $update_sql = 'UPDATE socialorder SET amountSpent = :amountSpent,status = :status,quantity = :quantity,socialUrl = :socialUrl,orderDate = :orderDate
-        Where id = :id ';
+        $update_sql = 'UPDATE category SET name = :name,description = :description Where id = :id ';
         $update = $pdo->prepare($update_sql);        
-        $update->execute(['amountSpent' => $amountSpent,
-        'status' => $status,'socialUrl' => $socialUrl,'orderDate' => $orderDate,'quantity' => $quantity,'id' => $id]);
+        $update->execute(['name' => $name,
+        'description' => $description,'id' => $id]);
         
     
         echo '<script>
                     setTimeout(function() {
-                    window.location.href = "order?updated=true";
+                    window.location.href = "category?updated=true";
                     }, 200);
                     </script>';
     
@@ -288,7 +274,14 @@
             <!-- Main content area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
 
-                <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="orderTable()" x-init="init()">
+                <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="categoryTable()" x-init="init()">
+
+                    <div class="flex justify-end mb-4">
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
+                            onclick="window.location.href='create-category';">
+                            Create
+                        </button>
+                    </div>
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
                         <h1 class="text-xl font-semibold text-gray-800">Order History</h1>
                         <input type="text" placeholder="Search..."
@@ -302,12 +295,7 @@
                                 <tr>
                                     <th class="px-4 py-2 text-left">ID</th>
                                     <th class="px-4 py-2 text-left">Name</th>
-                                    <th class="px-4 py-2 text-left">Title</th>
-                                    <th class="px-4 py-2 text-left">Price</th>
-                                    <th class="px-4 py-2 text-left">Quantity</th>
-                                    <th class="px-4 py-2 text-left">Status</th>
-                                    <th class="px-4 py-2 text-left">Social URL</th>
-                                    <th class="px-4 py-2 text-left">Date</th>
+                                    <th class="px-4 py-2 text-left">Description</th>
                                     <th class="px-4 py-2 text-left">Actions</th>
 
                                 </tr>
@@ -316,20 +304,8 @@
                                 <template x-for="row in paginatedRows()" :key="row.id">
                                     <tr class="hover:bg-gray-50 border-b">
                                         <td class="px-4 py-2" x-text="row.id"></td>
-                                        <td class="px-4 py-2" x-text="row.fullName"></td>
-                                        <td class="px-4 py-2" x-text="row.title"></td>
-                                        <td class="px-4 py-2" x-text="row.amount"></td>
-                                        <td class="px-4 py-2" x-text="row.quantity"></td>
-                                        <td class="px-4 py-2">
-                                            <span class="text-xs px-2 py-1 rounded-full"
-                                                :class="row.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
-                                                x-text="row.status"></span>
-                                        </td>
-                                        <td class="px-4 py-2">
-                                            <a :href="row.socialurl" class="text-blue-600 underline break-all"
-                                                x-text="row.socialurl"></a>
-                                        </td>
-                                        <td class="px-4 py-2" x-text="row.date"></td>
+                                        <td class="px-4 py-2" x-text="row.name"></td>
+                                        <td class="px-4 py-2" x-text="row.description"></td>
 
                                         <td class="border border-gray-300 p-2 flex gap-2">
                                             <button @click="showModal(row, false)"
@@ -373,73 +349,22 @@
                                             <input type="hidden" name="id" x-model="modalData.id">
                                         </div>
 
-                                        <!-- Name -->
+
                                         <div>
                                             <label class="block text-sm font-medium mb-1">Name</label>
-                                            <input type="text" x-model="modalData.fullName"
+                                            <input type="text" x-model="modalData.name" name="name"
                                                 class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                                 :class="!isEditing ? 'bg-gray-50' : ''">
                                         </div>
 
-                                        <!-- Title -->
+
                                         <div>
-                                            <label class="block text-sm font-medium mb-1">Title</label>
-                                            <input type="text" x-model="modalData.title"
+                                            <label class="block text-sm font-medium mb-1">Description</label>
+                                            <input type="text" x-model="modalData.description" name="description"
                                                 class="w-full border rounded-lg p-2" :readonly="!isEditing"
                                                 :class="!isEditing ? 'bg-gray-50' : ''">
                                         </div>
 
-                                        <!-- Price -->
-                                        <div>
-                                            <label class="block text-sm font-medium mb-1">Price</label>
-                                            <input type="number" step="0.01" x-model.number="modalData.amountValue"
-                                                name="amountSpent" class="w-full border rounded-lg p-2"
-                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                        </div>
-
-                                        <!-- Quantity -->
-                                        <div>
-                                            <label class="block text-sm font-medium mb-1">Quantity</label>
-                                            <input type="number" min="0" x-model.number="modalData.quantity"
-                                                name="quantity" class="w-full border rounded-lg p-2"
-                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
-                                        </div>
-
-                                        <!-- Status -->
-                                        <div>
-                                            <label class="block text-sm font-medium mb-1">Status</label>
-                                            <select x-model="modalData.status" class="w-full border rounded-lg p-2"
-                                                name="status" :disabled="!isEditing"
-                                                :class="!isEditing ? 'bg-gray-50' : ''">
-                                                <template x-for="s in statuses" :key="s">
-                                                    <option :value="s" x-text="s"></option>
-                                                </template>
-                                            </select>
-                                        </div>
-
-                                        <!-- Social URL -->
-                                        <div class="md:col-span-2">
-                                            <label class="block text-sm font-medium mb-1">Social URL</label>
-                                            <input type="url" x-model="modalData.socialurl" name="socialUrl"
-                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                                :class="!isEditing ? 'bg-gray-50' : ''">
-                                        </div>
-
-                                        <!-- Date -->
-                                        <div>
-                                            <label class="block text-sm font-medium mb-1">Date</label>
-                                            <input type="date" x-model="modalData.dateISO" name="orderDate"
-                                                class="w-full border rounded-lg p-2" :disabled="!isEditing"
-                                                :class="!isEditing ? 'bg-gray-50' : ''">
-                                        </div>
-
-                                        <!-- Pretty date (read-only display) -->
-                                        <div>
-                                            <label class="block text-sm font-medium mb-1">Formatted Date</label>
-                                            <input type="text"
-                                                class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
-                                                :value="formatDisplayDate(modalData.dateISO)" readonly>
-                                        </div>
                                     </div>
 
                                     <div class="flex justify-end gap-2 mt-6">
@@ -475,81 +400,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div class="p-5 border-b border-gray-100">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-800">Recent Orders</h3>
-                            <button class="text-sm text-purple-600 hover:text-purple-800 font-medium"
-                                onclick="event.stopPropagation();window.location.href='order-history'">
-                                View All <i class="fas fa-chevron-right ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="divide-y divide-gray-100">
-                        <?php foreach($rows as $row): ?>
-                        <!-- Order  -->
-                        <div class="order-card p-5 hover:bg-gray-50 transition duration-200">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                                <div class="flex items-start space-x-4">
-                                    <div
-                                        class="platform-icon <?php echo $row -> iconBg ?> <?php echo $row -> iconColour ?>">
-                                        <i class="<?php echo $row -> icon ?>"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-800"><?php echo $row -> title ?></h4>
-                                        <p class="text-sm text-gray-500">Order #<?php echo $row -> orderId ?></p>
-                                        <p class="text-xs text-gray-400 mt-1">Placed on <?php 
 
-                                        $timestamp = $row -> orderDate;
-                                            $date = new DateTime($timestamp);
-                                            $formatted = $date->format('d, M Y');
-
-                                            echo $formatted;
-
-                                        
-                                        
-                                        ?></p>
-                                    </div>
-                                </div>
-                                <div class="mt-4 md:mt-0 flex flex-col md:items-end">
-
-                                    <?php
-                                    $status = $row -> status;
-                                    $bg = '';
-                                    $colour = '';
-                                    $count = ($row -> quantity) - ($row -> orderCountTrack);
-                                    $percentage = ($count / $row -> quantity) * 100;
-
-                                    if ($status == 'Completed') {
-                                        $bg = 'bg-green-100';
-                                        $colour = 'text-green-800';
-                                    }
-                                    elseif ($status == 'In Progress') {
-                                        $bg = 'bg-yellow-100';
-                                        $colour = 'text-yellow-800';
-                                    } else {
-                                        $bg = 'bg-red-100';
-                                        $colour = 'text-red-800';
-                                    }   
-
-                                    
-                                    ?>
-                                    <span
-                                        class="px-3 py-1 rounded-full text-xs font-medium <?php echo $bg ?> <?php echo $colour ?>"><?php echo $status ?></span>
-                                    <p class="text-sm text-gray-500 mt-2"><?php echo $count ?> out of
-                                        <?php echo $row -> quantity ?> delivered</p>
-                                    <div class="flex items-center mt-1">
-
-                                        <span
-                                            class="ml-2 text-xs text-gray-500"><?php echo number_format($percentage, 0) ?>%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <?php endforeach?>
-                    </div>
-                </div>
 
 
 
@@ -577,7 +428,8 @@
         overlay.classList.remove('active');
     });
 
-    const ordersFromPHP = <?php echo json_encode($rowsOrder, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    const categoriesFromPHP =
+    <?php echo json_encode($rowsCategory, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
     function formatDate(dateStr) {
         const date = new Date(dateStr);
@@ -588,7 +440,7 @@
         });
     }
 
-    function orderTable() {
+    function categoryTable() {
         return {
             search: '',
             currentPage: 1,
@@ -622,21 +474,13 @@
             },
 
             init() {
-                this.rows = ordersFromPHP.map(order => {
-                    const amountNum = parseFloat(order.amountSpent ?? order.amount ?? 0) || 0;
-                    const rawDate = order.orderDate ?? order.date ?? new Date().toISOString();
-                    const iso = this.toISODate(rawDate);
+                this.rows = categoriesFromPHP.map(category => {
+
                     return {
-                        id: order.orderId,
-                        fullName: order.fullName,
-                        title: order.title,
-                        amountValue: amountNum, // numeric, used in modal input
-                        amount: `$${amountNum.toFixed(2)}`, // formatted, used in table
-                        quantity: Number(order.quantity) || 0,
-                        status: order.status ?? 'Pending',
-                        socialurl: order.socialUrl ?? '',
-                        dateISO: iso, // yyyy-mm-dd for input[type=date]
-                        date: this.formatDisplayDate(iso) // pretty for table
+                        id: category.id,
+                        name: category.name,
+                        description: category.description,
+
                     };
                 });
                 this.filtered = this.rows;
@@ -682,15 +526,8 @@
                     const iso = this.modalData.dateISO || this.toISODate(new Date());
                     this.rows[i] = {
                         ...this.rows[i],
-                        fullName: this.modalData.fullName,
-                        title: this.modalData.title,
-                        amountValue: amountNum,
-                        amount: `$${amountNum.toFixed(2)}`,
-                        quantity: Number(this.modalData.quantity) || 0,
-                        status: this.modalData.status,
-                        socialurl: this.modalData.socialurl,
-                        dateISO: iso,
-                        date: this.formatDisplayDate(iso)
+                        name: this.modalData.name,
+                        description: this.modalData.description
                     };
                     // refresh filtered so table reflects changes immediately
                     this.filterRows();
@@ -712,7 +549,7 @@
                     confirmButtonText: "Yes, delete it"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('delete-order.php', {
+                        fetch('delete-category.php', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -724,7 +561,7 @@
                                 if (data.success) {
                                     this.rows = this.rows.filter(r => r.id !== id); // remove from table
                                     this.filterRows();
-                                    Swal.fire("Deleted!", "The order has been deleted.", "success");
+                                    Swal.fire("Deleted!", "The Category has been deleted.", "success");
                                 } else {
                                     Swal.fire("Error", data.message || "Could not delete order.", "error");
                                 }

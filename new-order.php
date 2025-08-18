@@ -14,12 +14,14 @@
     if (isset($_GET['platform'])) {
 
         $platform = htmlspecialchars($_GET['platform']);
-        $sql = 'SELECT * FROM service WHERE platform = :platform';        
+        $sql = 'SELECT * FROM service 
+        INNER JOIN category on service.categoryId = category.Id
+        WHERE platform = :platform';        
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['platform' => $platform]);
         $rows = $stmt->fetchAll();
     } else {
-        $sql = 'SELECT * FROM service';        
+        $sql = 'SELECT * FROM service INNER JOIN category on service.categoryId = category.Id';        
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $rows = $stmt->fetchAll();
@@ -221,7 +223,7 @@
                 <!-- Service Card -->
                  <?php foreach ($rows as $row):;?>
                   
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 cursor-pointer" onclick="window.location.href='check-out?service=<?php echo $row -> title; ?>'" data-category="<?php echo $row -> category; ?>">
+                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 cursor-pointer" onclick="window.location.href='check-out?service=<?php echo $row -> title; ?>'" data-category="<?php echo $row -> name; ?>">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <div class="<?php echo $row -> highLightBg; ?> <?php echo $row -> highLightColour; ?> px-3 py-1 rounded-full text-xs font-semibold"><?php echo $row -> highLight; ?></div>

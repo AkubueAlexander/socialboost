@@ -212,6 +212,11 @@
                         <i class="fas fa-wallet mr-3"></i>
                         Withdrawal
                     </a>
+                    <a href="category"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-cubes mr-3"></i>
+                        Category
+                    </a>
                     <a href="settings"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-cog mr-3"></i>

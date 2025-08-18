@@ -15,6 +15,10 @@ if (true) {
     $stmt = $pdo->prepare("UPDATE earnerwallet SET balance = :balance WHERE userId = :userId");
     $stmt->execute(['balance' => $balance, 'userId' => $userId]);
 
+    header('Location: earnings?success=true');
+
+
+
 
     
 

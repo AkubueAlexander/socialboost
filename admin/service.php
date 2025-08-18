@@ -14,6 +14,13 @@
     $stmt->execute();
     $rowsService = $stmt->fetchAll();
 
+    $sqlCategory = 'SELECT * FROM category'; 
+    $stmtCategory = $pdo->prepare($sqlCategory);
+    $stmtCategory->execute();
+    $rowsCategory = $stmtCategory->fetchAll();
+
+
+
 
       if (isset($_POST['edit'])) {       
 
@@ -37,7 +44,7 @@
         $highLight = $_POST['highLight'];    
         $highLightColour = $_POST['highLightColour'];
         $highLightBg = $_POST['highLightBg'];               
-        $category = $_POST['category'];
+        $categoryId = $_POST['categoryId'];
      
              
         
@@ -46,7 +53,7 @@
         advPrice = :advPrice,earnerPrice = :earnerPrice,per = :per,platform = :platform,imgUrl = :imgUrl,
         imgBg = :imgBg,icon = :icon,iconColour = :iconColour,iconBg = :iconBg,rating = :rating,ratingCount = :ratingCount,
         platformBg = :platformBg,platformColour = :platformColour,highLight = :highLight,highLightColour = :highLightColour,highLightBg = :highLightBg,
-        category = :category
+        categoryId = :categoryId
 
         Where id = :id ';
         $update = $pdo->prepare($update_sql);        
@@ -57,7 +64,7 @@
     ,
         'rating' => $rating,'ratingCount' => $ratingCount,'platformBg' => $platformBg,'platformColour' => $platformColour,'highLight' => $highLight
     ,
-        'highLightColour' => $highLightColour,'highLightBg' => $highLightBg,'category' => $category,'id' => $id]);
+        'highLightColour' => $highLightColour,'highLightBg' => $highLightBg,'categoryId' => $categoryId,'id' => $id]);
         
     
         echo '<script>
@@ -196,7 +203,7 @@
             </script>";
         }
         ?>
-         <?php
+    <?php
         if (isset($_GET['created'])) {
             echo "<script>
                 Swal.fire({
@@ -209,7 +216,8 @@
         ?>
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
+        <div
+            class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
@@ -247,6 +255,11 @@
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-wallet mr-3"></i>
                         Withdrawal
+                    </a>
+                    <a href="category"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-cubes mr-3"></i>
+                        Category
                     </a>
                     <a href="settings"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
@@ -314,7 +327,8 @@
 
                 <div class="max-w-7xl mx-auto bg-white p-6 rounded-xl shadow" x-data="serviceTable()" x-init="init()">
                     <div class="flex justify-end mb-4">
-                        <button class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded" onclick="window.location.href='create-service';">
+                        <button class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded"
+                            onclick="window.location.href='create-service';">
                             Create
                         </button>
                     </div>
@@ -377,7 +391,7 @@
                                         <td class="px-4 py-2" x-text="row.highLight"></td>
                                         <td class="px-4 py-2" x-text="row.highLightColour"></td>
                                         <td class="px-4 py-2" x-text="row.highLightBg"></td>
-                                        <td class="px-4 py-2" x-text="row.category"></td>
+                                        <td class="px-4 py-2" x-text="categoryName(row.categoryId)"></td>
 
 
 
@@ -419,7 +433,7 @@
                                         <!-- ID (always read-only) -->
                                         <div>
                                             <label class="block text-sm font-medium mb-1">ID</label>
-                                            <input type="text" x-model="modalData.id" 
+                                            <input type="text" x-model="modalData.id"
                                                 class="w-full border rounded-lg p-2 bg-gray-100 cursor-not-allowed"
                                                 readonly>
                                             <input type="hidden" name="id" x-model="modalData.id">
@@ -450,15 +464,15 @@
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium mb-1">Advertiser Price</label>
-                                            <input type="number" step="0.01" x-model.number="modalData.advPrice" name="advPrice"
-                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                            <input type="number" step="0.01" x-model.number="modalData.advPrice"
+                                                name="advPrice" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium mb-1">Earner Price</label>
-                                            <input type="number" step="0.01" x-model.number="modalData.earnerPrice" name="earnerPrice"
-                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
-                                                :class="!isEditing ? 'bg-gray-50' : ''">
+                                            <input type="number" step="0.01" x-model.number="modalData.earnerPrice"
+                                                name="earnerPrice" class="w-full border rounded-lg p-2"
+                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
                                         </div>
 
 
@@ -514,15 +528,16 @@
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium mb-1">Rating</label>
-                                            <input type="number" step="0.01" x-model.number="modalData.rating" name="rating"
-                                                placeholder="e.g 4.5" class="w-full border rounded-lg p-2"
+                                            <input type="number" step="0.01" x-model.number="modalData.rating"
+                                                name="rating" placeholder="e.g 4.5" class="w-full border rounded-lg p-2"
                                                 :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium mb-1">Rating Count</label>
-                                            <input type="number" x-model.number="modalData.ratingCount" name="ratingCount"
-                                                placeholder="e.g 1500" class="w-full border rounded-lg p-2"
-                                                :readonly="!isEditing" :class="!isEditing ? 'bg-gray-50' : ''">
+                                            <input type="number" x-model.number="modalData.ratingCount"
+                                                name="ratingCount" placeholder="e.g 1500"
+                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                                :class="!isEditing ? 'bg-gray-50' : ''">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium mb-1">Platform Background</label>
@@ -558,10 +573,13 @@
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium mb-1">Category</label>
-                                            <input type="text" x-model="modalData.category" name="category"
-                                                placeholder="e.g Followers | Reviews"
-                                                class="w-full border rounded-lg p-2" :readonly="!isEditing"
+                                            <select x-model.number="modalData.categoryId" name="categoryId"
+                                                class="w-full border rounded-lg p-2" :disabled="!isEditing"
                                                 :class="!isEditing ? 'bg-gray-50' : ''">
+                                                <template x-for="c in categories" :key="c.id">
+                                                    <option :value="c.id" x-text="c.name"></option>
+                                                </template>
+                                            </select>
                                         </div>
 
 
@@ -571,7 +589,7 @@
                                     <div class="flex justify-end gap-2 mt-6">
                                         <button @click="modalOpen=false"
                                             class="px-4 py-2 rounded-lg border">Close</button>
-                                        <button type="submit" x-show="isEditing"   name="edit"
+                                        <button type="submit" x-show="isEditing" name="edit"
                                             class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
                                             Update
                                         </button>
@@ -601,7 +619,7 @@
                     </div>
                 </div>
 
-                
+
 
 
 
@@ -630,6 +648,7 @@
     });
 
     const servicesFromPHP = <?php echo json_encode($rowsService, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    const categoryFromPHP = <?php echo json_encode($rowsCategory, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
     function formatDate(dateStr) {
         const date = new Date(dateStr);
@@ -652,6 +671,12 @@
             modalOpen: false,
             isEditing: false,
             modalData: {},
+            categories: categoryFromPHP.map(c => ({
+                id: c.id,
+                name: c.name 
+            })),
+
+
 
             init() {
                 this.rows = servicesFromPHP.map(service => {
@@ -677,7 +702,7 @@
                         highLight: service.highLight,
                         highLightColour: service.highLightColour,
                         highLightBg: service.highLightBg,
-                        category: service.category
+                        categoryId: service.categoryId
                     };
                 });
                 this.filtered = this.rows;
@@ -740,7 +765,7 @@
                         highLight: this.modalData.highLight,
                         highLightColour: this.modalData.highLightColour,
                         highLightBg: this.modalData.highLightBg,
-                        category: this.modalData.category
+                        categoryId: this.modalData.categoryId
 
 
                     };
@@ -786,7 +811,13 @@
                             });
                     }
                 });
+            },
+
+            categoryName(id) {
+                const c = this.categories.find(x => String(x.id) === String(id));
+                return c ? c.name : '—';
             }
+
 
 
 

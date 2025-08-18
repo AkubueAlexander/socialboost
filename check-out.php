@@ -11,9 +11,14 @@
         $sql = 'SELECT * FROM service WHERE title = :title';        
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['title' => $title]);
-        $row = $stmt->fetch();
+        $row = $stmt->fetch();       
 
         $per = $row->per;
+
+          $sqlUser = 'SELECT fullName FROM user  WHERE id = :id LIMIT 1';        
+        $stmtUser = $pdo->prepare($sqlUser);
+        $stmtUser->execute(['id' => $_SESSION['id']]);
+        $rowUser = $stmtUser->fetch();
 
   
   if (isset($_POST['submit'])) {
@@ -235,7 +240,7 @@
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
@@ -278,7 +283,7 @@
                             <i class="fas fa-user text-white"></i>
                         </div>
                         <div class="ml-3">
-                            <p class="text-sm font-medium">John Doe</p>
+                            <p class="text-sm font-medium"><?php echo $rowUser -> fullName ?></p>
                             <p class="text-xs opacity-70">Premium User</p>
                         </div>
                     </div>
@@ -316,7 +321,7 @@
                             <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
                                 <i class="fas fa-user text-purple-600"></i>
                             </div>
-                            <span class="ml-2 text-sm font-medium">John Doe</span>
+                            <span class="ml-2 text-sm font-medium"><?php echo $rowUser -> fullName ?></span>
                         </div>
                     </div>
                 </div>
