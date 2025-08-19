@@ -20,9 +20,9 @@
     
 
 
-    $sql = 'INSERT INTO service (name, descriptions)';
+        $sql = "INSERT INTO category (name, description) VALUES (:name, :description)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['name' => $name,'advDes' => $advDes]);
+        $stmt->execute(['name' => $name,'description' => $description]);
         
 
     header("Location: category?created=1");
@@ -225,7 +225,7 @@
                         <button id="sidebarToggle" class="md:hidden mr-4 text-gray-500">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
-                        <h2 class="text-xl font-semibold text-gray-800">Create Service</h2>
+                        <h2 class="text-xl font-semibold text-gray-800">Create Category</h2>
                     </div>
                     <div class="flex items-center space-x-4">
                         <div class="relative">
@@ -251,119 +251,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                         <div>
-                            <label class="block text-gray-700 text-sm mb-1">Title</label>
-                            <input type="text" placeholder="e.g Google play Review" name="title"
+                            <label class="block text-gray-700 text-sm mb-1">Name</label>
+                            <input type="text" placeholder="e.g reviews" name="name"
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-gray-700 text-sm mb-1">Advertiser Description</label>
-                            <textarea placeholder="Description" name="advDes"
-                                class="  w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-                            </textarea>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-gray-700 text-sm mb-1">Earner Description</label>
-                            <textarea placeholder="Description" name="earnerDes"
-                                class="  w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-                            </textarea>
-                        </div>
+                        
                         <div>
-                            <label class="block text-gray-700 text-sm mb-1">Advertiser Price</label>
-                            <input type="number" step="0.01" placeholder="e.g 20.45" name="advPrice"
+                            <label class="block text-gray-700 text-sm mb-1">Description</label>
+                            <input type="text" placeholder="e.g APP Review" name="description"
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
                         </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Earner Price</label>
-                            <input type="number" step="0.01" placeholder="e.g 2.50" name="earnerPrice"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Per (Count)</label>
-                            <input type="number" placeholder="e.g 10" name="per"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Platform</label>
-                            <input type="text" placeholder="e.g google" name="platform"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Platform Background</label>
-                            <input type="text" placeholder="e.g bg-blue-100" name="platformBg"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Platform Colour</label>
-                            <input type="text" placeholder="e.g bg-blue-800" name="platformColour"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Image Url</label>
-                            <input type="text" placeholder="e.g https://image-link.png" name="imgUrl"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Image Background</label>
-                            <input type="text" placeholder="e.g bg-purple-100" name="imgBg"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Icon</label>
-                            <input type="text" placeholder="e.g fas fa-star" name="icon"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Icon Background</label>
-                            <input type="text" placeholder="e.g text-red-100" name="iconBg"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Icon Colour</label>
-                            <input type="text" placeholder="e.g text-red-500" name="iconColour"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Rating</label>
-                            <input type="rating" step="0.01" placeholder="e.g 4.21" name="rating"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Rating Count</label>
-                            <input type="number" placeholder="e.g 1200" name="iconColour"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Highlight</label>
-                            <input type="text" placeholder="e.g BESTSELLER" name="highLight"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Highlight Colour</label>
-                            <input type="text" placeholder="e.g text-blue-500" name="highLightColour"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Highlight Background</label>
-                            <input type="text" placeholder="e.g text-blue-100" name="highLightBg"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Category</label>
-                            <select name="categoryId"
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-                                <option value="">-- Select Category --</option>
-                                <?php foreach($rowsCategory as $row):?>
-                                <option value="<?php echo $row -> id?>"><?php echo $row -> description ?></option>
-                                
-                                <?php endforeach?>
-                            </select>
-                        </div>
+                       
 
 
                     </div>
                     <button type="submit" name="submit"
-                        class="mt-4 w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition">Save
+                        class="mt-4 w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition">Create
                     </button>
                 </form>
 
