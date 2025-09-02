@@ -191,10 +191,20 @@
                         <i class="fas fa-bookmark mr-3"></i>
                         Service
                     </a>
+                    <a href="admin-service"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-tools mr-3"></i>
+                        Admin Service
+                    </a>
                     <a href="task"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-tasks mr-3"></i>
                         Task
+                    </a>
+                    <a href="admin-task"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-clipboard-list mr-3"></i>
+                        Admin Task
                     </a>
                     <a href="user"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
@@ -283,7 +293,7 @@
                         </button>
                     </div>
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-                        <h1 class="text-xl font-semibold text-gray-800">Order History</h1>
+                        <h1 class="text-xl font-semibold text-gray-800">Category</h1>
                         <input type="text" placeholder="Search..."
                             class="w-full md:w-1/3 px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none"
                             x-model="search" @input="filterRows()" />
@@ -429,7 +439,7 @@
     });
 
     const categoriesFromPHP =
-    <?php echo json_encode($rowsCategory, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+        <?php echo json_encode($rowsCategory, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
     function formatDate(dateStr) {
         const date = new Date(dateStr);

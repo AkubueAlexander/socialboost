@@ -188,7 +188,7 @@
                 <h1 class="text-xl font-bold">Boostbrands</h1>
             </div>
             <nav class="mt-8">
-                <div class="px-4 space-y-1">
+                 <div class="px-4 space-y-1">
                     <a href="index" class="flex items-center px-4 py-3 bg-white bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         Dashboard
@@ -203,10 +203,20 @@
                         <i class="fas fa-bookmark mr-3"></i>
                         Service
                     </a>
+                    <a href="admin-service"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-tools mr-3"></i>
+                        Admin Service
+                    </a>
                     <a href="task"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-tasks mr-3"></i>
                         Task
+                    </a>
+                    <a href="admin-task"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-clipboard-list mr-3"></i>
+                        Admin Task
                     </a>
                     <a href="user"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">

@@ -19,6 +19,18 @@
     $stmt->execute();
     $rows = $stmt->fetchAll();
 
+    //Admin Tasks
+    
+    $sqlAdmin = "SELECT admintask.id AS adminId, adminservice.id AS adminServiceId, adminservice.*, admintask.* FROM adminservice
+    INNER JOIN admintask ON admintask.adminServiceId = adminservice.id
+    WHERE admintask.status = 'pending'
+    ";
+    $stmtAdmin = $pdo->prepare($sqlAdmin);
+    $stmtAdmin->execute();
+    $adminRows = $stmtAdmin->fetchAll();
+
+   
+
   
 
 
@@ -93,13 +105,13 @@ if (isset($_POST['submit'])) {
     $orderId = $_POST['orderId'];
     $status = 'In Progress';
 
-    $sqlTrack = 'SELECT orderCountTrack FROM socialorder WHERE id = :id';
-    $stmtTrack = $pdo->prepare($sqlTrack);
-    $stmtTrack->execute(['id' => $orderId]);
-    $rowTrack = $stmtTrack->fetch();
+    // $sqlTrack = 'SELECT orderCountTrack FROM socialorder WHERE id = :id';
+    // $stmtTrack = $pdo->prepare($sqlTrack);
+    // $stmtTrack->execute(['id' => $orderId]);
+    // $rowTrack = $stmtTrack->fetch();
 
-    $orderCountTrack = $rowTrack -> orderCountTrack;
-    $orderCountTrack -= 1; 
+    // $orderCountTrack = $rowTrack -> orderCountTrack;
+    
     
 
     $sqlTask = 'INSERT INTO task (id, earnerId, orderId) VALUES (:id, :earnerId, :orderId)';
@@ -110,9 +122,9 @@ if (isset($_POST['submit'])) {
 
 
     
-    $sqlUpdate = 'UPDATE socialorder SET status =  :status, orderCountTrack = :orderCountTrack WHERE id = :id';
+    $sqlUpdate = 'UPDATE socialorder SET status =  :status WHERE id = :id';
     $stmtUpdate = $pdo->prepare($sqlUpdate);
-    $stmtUpdate->execute(['status' => $status, 'id' => $orderId, 'orderCountTrack' => $orderCountTrack]);
+    $stmtUpdate->execute(['status' => $status, 'id' => $orderId]);
 
     header('location: perform-task?orderId='.$orderId.'&title='.$title.'&taskId='.$id);
     
@@ -130,6 +142,7 @@ if (isset($_POST['submit'])) {
     <title>Boost Social - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
     tailwind.config = {
@@ -233,6 +246,17 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body class="bg-gray-50">
+    <?php
+        if (isset($_GET['admintask'])) {
+            echo "<script>
+                Swal.fire({
+                    title: 'Task Done Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            </script>";
+        }
+        ?>
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <div class="sidebar w-64 bg-gradient-to-b from-indigo-50 to-violet-50 shadow-md">
@@ -273,7 +297,7 @@ if (isset($_POST['submit'])) {
                             <i class="fas fa-wallet"></i>
                             <span>Earnings</span>
                         </a>
-                       
+
                         <a href="earner-settings"
                             class="flex items-center space-x-3 p-3 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary">
                             <i class="fas fa-cog"></i>
@@ -425,6 +449,63 @@ if (isset($_POST['submit'])) {
                     </div>
                 </div>
 
+                <!-- Admin Tasks -->
+                <div class="mt-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-bold text-dark">Admin Tasks</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <?php 
+                           
+                            foreach ($adminRows as $row): ?>
+
+                        <div
+                            class="task-card bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="w-12 h-12 rounded-full <?php echo $row->iconBg ?> flex items-center justify-center <?php echo $row->iconColour ?>">
+                                        <i class="<?php echo $row->icon ?>"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-dark"><?php echo $row->title ?></h4>
+                                        <div class="flex space-x-2 mt-1">
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+
+                                                Activate
+
+                                            </span>
+                                            <span
+                                                class="px-2 py-1 <?php echo $row->iconBg ?> <?php echo $row->iconColour ?> text-xs rounded-full"><?php echo $row->platform ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-gray-600 text-sm">Perform this task to activate <?php echo $row->title ?>
+                                </p>
+                                <div class="flex items-center justify-between mt-4">
+                                    <div class="text-primary font-bold"><?php echo $row->highLight ?></div>
+                                    <button type="button"
+                                        onclick="window.location.href='perform-admin-task?id=<?php echo $row->adminId ?>&adminServiceId=<?php echo $row->adminServiceId ?>&title=<?php echo urlencode($row->title) ?>'"
+                                        class="px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary hover:text-white transition-colors duration-200">
+                                        Start Task
+                                    </button>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php 
+                      
+                    endforeach;
+                    ?>
+                    </div>
+
+                </div>
+
                 <!-- Available Tasks -->
                 <div class="mt-8">
                     <div class="flex items-center justify-between mb-6">
@@ -444,8 +525,27 @@ if (isset($_POST['submit'])) {
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <?php 
+
+
                             $i = 0;
                             foreach ($rows as $row):
+
+                                $platform = strtolower($row->platform);
+                                $earnerId = $_SESSION['id'];
+
+                                $sqlCheck = 'SELECT * FROM admintask 
+                                INNER JOIN adminservice ON admintask.adminServiceId = adminservice.id
+                                WHERE admintask.earnerId = :earnerId AND LOWER(adminservice.platform) = :platform AND admintask.status = "pending" LIMIT 1';                                     
+                                $stmtCheck = $pdo->prepare($sqlCheck);
+                                $stmtCheck->execute(['earnerId' => $earnerId, 'platform' => $platform]);
+                                $rowCheck = $stmtCheck->fetch();
+
+                                if ($rowCheck) {
+                                    continue; // Skip this iteration if the user has not completed the admin task for this platform
+                                }
+
+
+
 
                                 $orderId = $row->orderId;
 
@@ -516,7 +616,7 @@ if (isset($_POST['submit'])) {
 
                 </div>
 
-                
+
 
                 <!-- Recent Tasks -->
                 <div class="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

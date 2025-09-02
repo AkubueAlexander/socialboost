@@ -15,41 +15,44 @@
 
     if (isset($_POST['submit'])) {
     $title = trim($_POST['title']);    
-    $advDes = $_POST['advDes'];      
-    $earnerDes = trim($_POST['earnerDes']);       
-    $advPrice = $_POST['advPrice'];  
-    $earnerPrice = trim($_POST['earnerPrice']);
-    $per = trim($_POST['per']);
+    $des = $_POST['des'];   
     $platform = trim($_POST['platform']);
     $platformBg = trim($_POST['platformBg']);
     $platformColour = trim($_POST['platformColour']);
-    $imgUrl = trim($_POST['imgUrl']);
-    $imgBg = trim($_POST['imgBg']);
+    $socialUrl = trim($_POST['socialUrl']);  
+    $postUrl = trim($_POST['postUrl']); 
     $icon = trim($_POST['icon']);
     $iconBg = trim($_POST['iconBg']);
-    $iconColour = trim($_POST['iconColour']);
-    $rating = trim($_POST['rating']);
-    $ratingCount = trim($_POST['ratingCount']);
+    $iconColour = trim($_POST['iconColour']);    
     $highLight = trim($_POST['highLight']);
     $highLightColour = trim($_POST['highLightColour']);
     $highLightBg = trim($_POST['highLightBg']);
-    $categoryId = trim($_POST['categoryId']);
+   
+
+    $sql = "INSERT INTO adminservice 
+    (title, des, platform, platformBg, platformColour, socialUrl,postUrl, icon, iconBg, iconColour, highLight, highLightColour, highLightBg) 
+    VALUES (:title, :des, :platform, :platformBg, :platformColour, :socialUrl, :postUrl,:icon, :iconBg, :iconColour, :highLight, :highLightColour, :highLightBg)";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        ':title' => $title,
+        ':des' => $des,
+        ':platform' => $platform,
+        ':platformBg' => $platformBg,
+        ':platformColour' => $platformColour,
+        ':socialUrl' => $socialUrl,
+        ':postUrl' => $postUrl,
+        ':icon' => $icon,
+        ':iconBg' => $iconBg,
+        ':iconColour' => $iconColour,
+        ':highLight' => $highLight,
+        ':highLightColour' => $highLightColour,
+        ':highLightBg' => $highLightBg
+    ]);
 
 
-    $sql = 'INSERT INTO service (title, advDes, earnerDes,advPrice, earnerPrice,per, platform, platformBg, platformColour,
-     imgUrl, imgBg, icon, iconBg, iconColour, rating, ratingCount, highLight, highLightColour, highLightBg, categoryId) 
-    VALUES (:title,:advDes,:earnerDes,:advPrice,:earnerPrice,:per, :platform, :platformBg, :platformColour,
-     :imgUrl, :imgBg, :icon, :iconBg, :iconColour, :rating, :ratingCount, :highLight, :highLightColour, :highLightBg, :categoryId)';
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['title' => $title,'advDes' => $advDes,'earnerDes' => $earnerDes,'advPrice' => $advPrice,
-        'earnerPrice' => $earnerPrice,'per' => $per,'platform' => $platform,'platformBg' => $platformBg,
-        'platformColour' => $platformColour,'imgUrl' => $imgUrl,'imgBg' => $imgBg,'icon' => $icon,
-        'iconBg' => $iconBg,'iconColour' => $iconColour,'rating' => $rating,'ratingCount' => $ratingCount,
-        'highLight' => $highLight,'highLightColour' => $highLightColour,'highLightBg' => $highLightBg,
-        'categoryId' => $categoryId]);
-        
-
-    header("Location: service?created=1");
+    header("Location: admin-service?created=1");
 
     }
     
@@ -170,7 +173,7 @@
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
                 </div>
-                <h1 class="text-xl font-bold">Social Boost</h1>
+                <h1 class="text-xl font-bold">Boostbrands</h1>
             </div>
             <nav class="mt-8">
                 <div class="px-4 space-y-1">
@@ -259,7 +262,7 @@
                         <button id="sidebarToggle" class="md:hidden mr-4 text-gray-500">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
-                        <h2 class="text-xl font-semibold text-gray-800">Create Service</h2>
+                        <h2 class="text-xl font-semibold text-gray-800">Create Admin Service</h2>
                     </div>
                     <div class="flex items-center space-x-4">
                         <div class="relative">
@@ -286,36 +289,16 @@
 
                         <div>
                             <label class="block text-gray-700 text-sm mb-1">Title</label>
-                            <input type="text" placeholder="e.g Google play Review" name="title" required
+                            <input type="text" placeholder="e.g Activate facebook tasks" name="title" required
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-gray-700 text-sm mb-1">Advertiser Description</label>
-                            <textarea placeholder="Description" name="advDes" required
+                            <label class="block text-gray-700 text-sm mb-1">Description</label>
+                            <textarea placeholder="follow socialboost,Like this socialboost post, Share post, post this comment on the video" name="des" required
                                 class="  w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
                             </textarea>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-gray-700 text-sm mb-1">Earner Description</label>
-                            <textarea placeholder="Description" name="earnerDes" required
-                                class="  w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-                            </textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Advertiser Price</label>
-                            <input type="number" step="0.01" placeholder="e.g 20.45" name="advPrice" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Earner Price</label>
-                            <input type="number" step="0.01" placeholder="e.g 2.50" name="earnerPrice" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Per (Count)</label>
-                            <input type="number" placeholder="e.g 10" name="per" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
+                        </div>                        
+                        
                         <div>
                             <label class="block text-gray-700 text-sm mb-1">Platform</label>
                             <input type="text" placeholder="e.g google" name="platform" required
@@ -330,17 +313,7 @@
                             <label class="block text-gray-700 text-sm mb-1">Platform Colour</label>
                             <input type="text" placeholder="e.g bg-blue-800" name="platformColour" required
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Image Url</label>
-                            <input type="text" placeholder="e.g https://image-link.png" name="imgUrl" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Image Background</label>
-                            <input type="text" placeholder="e.g bg-purple-100" name="imgBg" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
+                        </div>                        
 
                         <div>
                             <label class="block text-gray-700 text-sm mb-1">Icon</label>
@@ -356,20 +329,10 @@
                             <label class="block text-gray-700 text-sm mb-1">Icon Colour</label>
                             <input type="text" placeholder="e.g text-red-500" name="iconColour" required
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Rating</label>
-                            <input type="number" step="0.01" placeholder="e.g 4.21" name="rating" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm mb-1">Rating Count</label>
-                            <input type="number" placeholder="e.g 1200" name="ratingCount" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                        </div>
+                        </div>                        
                         <div>
                             <label class="block text-gray-700 text-sm mb-1">Highlight</label>
-                            <input type="text" placeholder="e.g BESTSELLER" name="highLight" required
+                            <input type="text" placeholder="Admin Task" name="highLight" value="Admin Task" required
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
                         </div>
                         <div>
@@ -382,17 +345,19 @@
                             <input type="text" placeholder="e.g text-blue-100" name="highLightBg" required
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
                         </div>
+
                         <div>
-                            <label class="block text-gray-700 text-sm mb-1">Category</label>
-                            <select name="categoryId" required
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-                                <option value="">-- Select Category --</option>
-                                <?php foreach($rowsCategory as $row):?>
-                                <option value="<?php echo $row -> id?>"><?php echo $row -> description ?></option>
-                                
-                                <?php endforeach?>
-                            </select>
+                            <label class="block text-gray-700 text-sm mb-1">Social Url</label>
+                            <input type="text" placeholder="https://facebook link" name="socialUrl" required
+                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
                         </div>
+
+                        <div>
+                            <label class="block text-gray-700 text-sm mb-1">Post Url</label>
+                            <input type="text" placeholder="https://facebook link" name="postUrl" required
+                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
+                        </div>
+                       
 
 
                     </div>

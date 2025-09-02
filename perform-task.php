@@ -53,9 +53,14 @@ if (isset($_POST['submit'])) {
             $stmtCheck->execute(['id' => $orderId]);
             $rowCheck = $stmtCheck->fetch();
 
-            $orderTrackCount = $rowCheck -> orderCountTrack;
+            $orderCountTrack = $rowCheck -> orderCountTrack;
+            $orderCountTrack -= 1; 
 
-            if ($orderTrackCount == 0) {
+                $sqlCountTrack = 'UPDATE socialOrder SET orderCountTrack =  :orderCountTrack WHERE id = :id';
+                $stmtCountTrack = $pdo->prepare($sqlCountTrack);
+                $stmtCountTrack->execute(['orderCountTrack' => $orderCountTrack, 'id' => $orderId]);
+
+            if ($orderCountTrack == 0) {
                 $sqlUpdateOrder = 'UPDATE socialOrder SET status =  :status WHERE id = :id';
                 $stmtUpdateOrder = $pdo->prepare($sqlUpdateOrder);
                 $stmtUpdateOrder->execute(['status' => $statusOrder, 'id' => $orderId]); 

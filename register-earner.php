@@ -69,6 +69,19 @@ if (isset($_POST['submit'])) {
         $stmtEarnerWallet = $pdo->prepare($sqlEarnerWallet);
         $stmtEarnerWallet->execute(['userId' => $id]);
 
+        //Admin Tasks
+
+        $sqlAdmin = "SELECT * FROM adminservice";
+        $stmtAdmin = $pdo->prepare($sqlAdmin);
+        $stmtAdmin->execute();
+        $adminRows = $stmtAdmin->fetchAll();
+
+         foreach ($adminRows as $service) {
+            $sqlAdminTask = 'INSERT INTO admintask ( earnerId, adminServiceId) VALUES (:earnerId, :adminServiceId)';
+            $stmtAdminTask = $pdo->prepare($sqlAdminTask);
+            $stmtAdminTask->execute(['earnerId' => $id, 'adminServiceId' => $service-> id]);    
+         }  
+
         $to1 = $email;
         $subject_1 = 'Registeration successful';
         $fullName_1 = $fullName;        

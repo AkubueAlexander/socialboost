@@ -140,7 +140,8 @@
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <div class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
+        <div
+            class="sidebar relative bg-gradient-to-b from-purple-600 to-indigo-700 text-white w-64 flex-shrink-0 flex flex-col">
             <div class="p-4 flex items-center space-x-3">
                 <div class="bg-white p-2 rounded-lg">
                     <i class="fas fa-bolt text-purple-600 text-2xl"></i>
@@ -149,8 +150,7 @@
             </div>
             <nav class="mt-8">
                 <div class="px-4 space-y-1">
-                    <a href="index"
-                        class="flex items-center px-4 py-3 bg-white bg-opacity-10 rounded-lg text-white">
+                    <a href="index" class="flex items-center px-4 py-3 bg-white bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         Dashboard
                     </a>
@@ -164,17 +164,27 @@
                         <i class="fas fa-bookmark mr-3"></i>
                         Service
                     </a>
+                    <a href="admin-service"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-tools mr-3"></i>
+                        Admin Service
+                    </a>
                     <a href="task"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-tasks mr-3"></i>
                         Task
+                    </a>
+                    <a href="admin-task"
+                        class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
+                        <i class="fas fa-clipboard-list mr-3"></i>
+                        Admin Task
                     </a>
                     <a href="user"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-users mr-3"></i>
                         Users
                     </a>
-                    
+
                     <a href="withdrawal"
                         class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-10 rounded-lg text-white">
                         <i class="fas fa-wallet mr-3"></i>
@@ -191,6 +201,7 @@
                         Settings
                     </a>
                 </div>
+
             </nav>
             <div class="absolute bottom-0 w-full p-4">
                 <div class="bg-white bg-opacity-10 p-3 rounded-lg">
@@ -403,7 +414,7 @@
                                     <p class="text-sm text-gray-500 mt-2"><?php echo $count ?> out of
                                         <?php echo $row -> quantity ?> delivered</p>
                                     <div class="flex items-center mt-1">
-                                       
+
                                         <span
                                             class="ml-2 text-xs text-gray-500"><?php echo number_format($percentage, 0) ?>%</span>
                                     </div>
@@ -488,8 +499,6 @@
             }
         }
     });
-
-    
     </script>
 </body>
 

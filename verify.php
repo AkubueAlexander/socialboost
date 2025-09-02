@@ -10,7 +10,7 @@ if (isset($_GET['otp']) && isset($_GET['id'])) {
     $stmt->execute();
     $row = $stmt->fetch();    
     if ($row) {
-        if ($row->otp_code == $otp) {
+        if ($row->otp == $otp) {
         $sql = 'UPDATE user SET verifiedStatus = 1 Where id = :id LIMIT 1';
         $update = $pdo->prepare($sql);        
         $update->bindParam(':id',$id);
