@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 15, 2025 at 02:17 PM
+-- Generation Time: Sep 01, 2025 at 03:49 PM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -45,6 +45,100 @@ INSERT INTO `admin` (`id`, `email`, `pass`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `adminservice`
+--
+
+DROP TABLE IF EXISTS `adminservice`;
+CREATE TABLE IF NOT EXISTS `adminservice` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(25) NOT NULL,
+  `icon` varchar(25) NOT NULL,
+  `iconColour` varchar(25) NOT NULL,
+  `iconBg` varchar(25) NOT NULL,
+  `highLight` varchar(25) NOT NULL,
+  `highLightBg` varchar(25) NOT NULL,
+  `highLightColour` varchar(25) NOT NULL,
+  `des` text NOT NULL,
+  `platform` varchar(25) NOT NULL,
+  `platformColour` varchar(25) NOT NULL,
+  `platformBg` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `socialUrl` varchar(25) NOT NULL,
+  `postUrl` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `adminservice`
+--
+
+INSERT INTO `adminservice` (`id`, `title`, `icon`, `iconColour`, `iconBg`, `highLight`, `highLightBg`, `highLightColour`, `des`, `platform`, `platformColour`, `platformBg`, `socialUrl`, `postUrl`) VALUES
+(3, 'Activate Instagram Tasks', 'fas fa-star', 'text-red-500', 'bg-red-100', 'Admin Task', 'bg-blue-100', 'text-blue-800', 'follow socialboost,\r\nLike this socialboost post,\r\nshare this socialboost post,\r\npost this comment on the video\r\n', 'Instagram', 'text-blue-800', 'bg-blue-100', 'https://web.facebook.com/', 'https://web.facebook.com/'),
+(4, 'Activate Facebook Tasks', 'fas fa-star', 'text-red-500', 'bg-red-100', 'Admin Task', 'bg-blue-100', 'text-blue-800', 'follow socialboost,\r\nLike this socialboost post,\r\nShare post,\r\npost this comment on the video\r\n', 'Facebook', 'text-blue-800', 'bg-blue-100', 'https://web.facebook.com/', 'https://web.facebook.com/'),
+(5, 'Activate Youtube Task', 'fas fa-star', 'text-red-500', 'bg-red-100', 'Admin Task', 'bg-blue-100', 'text-blue-800', 'Subscribe to Socialboost Youtube Channel,\r\nLike this socialboost video,\r\nShare this socialboost video,\r\npost this comment on the video\r\n', 'Youtube', 'text-blue-800', 'bg-blue-100', 'https://web.facebook.com/', 'https://web.facebook.com/'),
+(6, 'Activate Whatsapp Tasks', 'fas fa-star', 'text-red-500', 'bg-red-100', 'Admin Task', 'bg-blue-100', 'text-blue-800', 'Post this Socialboost Video on your WhatsApp status for 24 hrs\r\n', 'Whatsapp', 'text-blue-800', 'bg-blue-100', 'https://web.facebook.com/', 'https://web.facebook.com/'),
+(7, 'Activate Twitter Tasks', 'fas fa-star', 'text-red-500', 'bg-red-100', 'Admin Task', 'bg-blue-100', 'text-blue-800', 'follow socialboost,\r\nLike this socialboost post,\r\nretweet post,\r\npost this comment on the video\r\n', 'Twitter', 'text-blue-800', 'bg-blue-100', 'https://web.facebook.com/', 'https://web.facebook.com/'),
+(8, 'Activate Apple Tasks', 'fas fa-star', 'text-red-500', 'bg-red-100', 'Admin Task', 'bg-blue-100', 'text-blue-800', 'Install this App,\r\nLeave a 5 star rating and post this review on the Apps review section', 'Apple', 'text-blue-800', 'bg-blue-100', 'https://web.facebook.com/', 'https://web.facebook.com/'),
+(9, 'Activate Google Tasks', 'fas fa-star', 'text-red-500', 'bg-red-100', 'Admin Task', 'bg-blue-100', 'text-blue-800', 'Install this App,\r\nLeave a 5 star rating and post this review on the Apps review section', 'Google', 'text-blue-800', 'bg-blue-100', 'https://web.facebook.com/', 'https://web.facebook.com/');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admintask`
+--
+
+DROP TABLE IF EXISTS `admintask`;
+CREATE TABLE IF NOT EXISTS `admintask` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `adminServiceId` int NOT NULL,
+  `earnerId` int NOT NULL,
+  `receipt` varchar(255) NOT NULL,
+  `status` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'pending',
+  `taskDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `adminserviceId` (`adminServiceId`),
+  KEY `earnerId` (`earnerId`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `admintask`
+--
+
+INSERT INTO `admintask` (`id`, `adminServiceId`, `earnerId`, `receipt`, `status`, `taskDate`) VALUES
+(2, 3, 17, 'admin_screenshot/receipt_68b5b8805544a6.11455285.png', 'Completed', '2025-09-01 12:47:31'),
+(3, 4, 17, '', 'pending', '2025-09-01 12:47:31'),
+(4, 5, 17, '', 'pending', '2025-09-01 12:47:31'),
+(5, 6, 17, '', 'pending', '2025-09-01 12:47:31'),
+(6, 7, 17, '', 'pending', '2025-09-01 12:47:31'),
+(7, 8, 17, '', 'pending', '2025-09-01 12:47:31'),
+(8, 9, 17, '', 'pending', '2025-09-01 12:47:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+CREATE TABLE IF NOT EXISTS `category` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(25) NOT NULL,
+  `description` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`id`, `name`, `description`) VALUES
+(1, 'reviews', 'App Reviews'),
+(2, 'followers', 'Followers'),
+(3, 'likes', 'Likes'),
+(4, 'views', 'Views');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `earnerwallet`
 --
 
@@ -58,14 +152,14 @@ CREATE TABLE IF NOT EXISTS `earnerwallet` (
   `bankName` varchar(25) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `earnerwallet`
 --
 
 INSERT INTO `earnerwallet` (`id`, `userId`, `balance`, `bankCode`, `accountNumber`, `bankName`) VALUES
-(5, 14, 36.21, '123', '12345677889', 'CitiBank');
+(7, 17, 0.00, '', '', '');
 
 -- --------------------------------------------------------
 
@@ -152,23 +246,20 @@ CREATE TABLE IF NOT EXISTS `service` (
   `highLight` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `highLightColour` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `highLightBg` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `category` varchar(25) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+  `categoryId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `categoryId` (`categoryId`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `service`
 --
 
-INSERT INTO `service` (`id`, `title`, `advDes`, `earnerDes`, `advPrice`, `earnerPrice`, `per`, `platform`, `imgUrl`, `imgBg`, `icon`, `iconBg`, `iconColour`, `rating`, `ratingCount`, `platformBg`, `platformColour`, `highLight`, `highLightColour`, `highLightBg`, `category`) VALUES
-(1, 'Google Play Reviews', 'High-quality Google Play store reviews from real users to boost your app\'s credibility.', 'Leave a 5-star review for the provided business on Google Play store platform.', 19.45, 3.00, 10, 'Google', 'https://cdn-icons-png.flaticon.com/512/300/300221.png', 'bg-purple-100', 'fas fa-star', 'bg-red-100', 'text-red-500', 4.00, 1200, 'bg-blue-100', 'text-blue-800', 'BESTSELLER', 'text-blue-800', 'bg-blue-100', 'reviews'),
-(2, 'Apple App Store Reviews', 'Premium App Store reviews to improve your iOS app\'s ranking and visibility.', 'Leave a 5-star review for the provided business on App Store platform.', 29.10, 2.70, 10, 'Apple', 'https://cdn-icons-png.flaticon.com/512/1532/1532556.png', 'bg-gray-100', 'fas fa-star', 'bg-red-100', 'text-red-500', 4.80, 890, 'bg-blue-100', 'text-blue-800', 'NEW', 'text-yellow-500', 'bg-green-100', 'reviews'),
-(3, 'Instagram Followers', 'Real, active Instagram followers to grow your profile and increase engagement.', 'Follow the specified Instagram account and stay following for at least 7 days.', 28.80, 2.70, 10, 'Instagram', 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png', 'bg-blue-100', 'fab fa-instagram', 'bg-purple-100', 'text-purple-500', 4.70, 1500, 'bg-purple-100', 'text-purple-800', 'LIMITED', 'text-red-800', 'bg-red-100', 'followers'),
-(4, 'YouTube Views', 'High-retention YouTube views to boost your video\'s ranking and visibility.', 'Watch the YouTube video provided on the advertiser\'s link.', 19.30, 0.93, 100, 'Youtube', 'https://cdn-icons-png.flaticon.com/512/1384/1384060.png', 'bg-red-100', 'fas fa-star', 'bg-red-100', 'text-red-500', 4.90, 1300, 'bg-blue-100', 'text-blue-800', 'TRENDING', 'text-yellow-800', 'bg-yellow-100', 'views'),
-(5, 'WhatsApp Group Members', 'Active members for your WhatsApp groups to increase engagement and visibility.', 'Join the WhatsApp Group with the link provided.', 14.50, 0.45, 100, 'WhatsApp', 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg', 'bg-green-100', 'fab fa-whatsapp', 'bg-green-100', 'text-green-500', 4.70, 1300, 'bg-green-100 ', 'text-blue-800', 'POPULAR', 'text-yellow-500', 'text-blue-800', 'followers'),
-(6, 'Twitter Followers', 'Real Twitter followers to increase your social proof and engagement rate.', 'Follow the specified twitter account and stay following for at least 7 days.', 17.60, 0.69, 100, 'Twitter', 'https://toppng.com/uploads/preview/twitter-icon-transparent-11549', 'bg-blue-100', 'fab fa-twitter', 'bg-blue-100', 'text-blue-500', 4.50, 987, 'bg-blue-100', 'text-blue-800', 'HOT', 'text-purple-800', 'bg-purple-100', 'followers'),
-(7, 'Google play review', 'lorem jff jjd\r\n                            ', 'krkrjf  jfjfjf jffj', 20.34, 2.90, 10, '', 'https://cdn-icons-png.flaticon.com/512/300/300221.png', 'bg-purple-100', 'fas fa-star', 'text-red-100', '1200', 4.21, 0, '', '', 'BESTSELLER', 'text-blue-500', 'text-blue-100', 'review'),
-(8, 'Google play review', 'jhjfj kfjkfm jfk                             ', 'kfklfkl fjkfllf fn', 20.45, 2.50, 10, 'google', 'https://cdn-icons-png.flaticon.com/512/300/300221.png', 'bg-purple', 'fas fa-star', 'text-red-100', '1200', 4.21, 0, 'bg-blue-100', 'bg-bg-800', 'BESTSELLER', 'text-blue-500', 'text-blue-100', 'review');
+INSERT INTO `service` (`id`, `title`, `advDes`, `earnerDes`, `advPrice`, `earnerPrice`, `per`, `platform`, `imgUrl`, `imgBg`, `icon`, `iconBg`, `iconColour`, `rating`, `ratingCount`, `platformBg`, `platformColour`, `highLight`, `highLightColour`, `highLightBg`, `categoryId`) VALUES
+(3, 'Instagram Followers', 'Real, active Instagram followers to grow your profile and increase engagement.', 'Follow the specified Instagram account and stay following for at least 7 days.', 28.80, 2.70, 10, 'Instagram', 'https://cdn-icons-png.flaticon.com/512/2111/2111463.png', 'bg-blue-100', 'fab fa-instagram', 'bg-purple-100', 'text-purple-500', 4.70, 1500, 'bg-purple-100', 'text-purple-800', 'LIMITED', 'text-red-800', 'bg-red-100', 2),
+(4, 'YouTube Views', 'High-retention YouTube views to boost your video\'s ranking and visibility.', 'Watch the YouTube video provided on the advertiser\'s link.', 19.30, 0.93, 100, 'Youtube', 'https://cdn-icons-png.flaticon.com/512/1384/1384060.png', 'bg-red-100', 'fas fa-star', 'bg-red-100', 'text-red-500', 4.90, 1300, 'bg-blue-100', 'text-blue-800', 'TRENDING', 'text-yellow-800', 'bg-yellow-100', 4),
+(5, 'WhatsApp Group Members', 'Active members for your WhatsApp groups to increase engagement and visibility.', 'Join the WhatsApp Group with the link provided.', 14.50, 0.45, 100, 'WhatsApp', 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg', 'bg-green-100', 'fab fa-whatsapp', 'bg-green-100', 'text-green-500', 4.70, 1300, 'bg-green-100 ', 'text-blue-800', 'POPULAR', 'text-yellow-500', 'text-blue-800', 2),
+(6, 'Twitter Followers', 'Real Twitter followers to increase your social proof and engagement rate.', 'Follow the specified twitter account and stay following for at least 7 days.', 17.60, 0.69, 100, 'Twitter', 'https://toppng.com/uploads/preview/twitter-icon-transparent-11549', 'bg-blue-100', 'fab fa-twitter', 'bg-blue-100', 'text-blue-500', 4.50, 987, 'bg-blue-100', 'text-blue-800', 'HOT', 'text-purple-800', 'bg-purple-100', 2);
 
 -- --------------------------------------------------------
 
@@ -181,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `socialorder` (
   `id` varchar(25) NOT NULL,
   `serviceId` int NOT NULL,
   `advId` int NOT NULL,
-  `amountSpent` decimal(10,0) NOT NULL,
+  `amountSpent` decimal(10,2) NOT NULL,
   `status` varchar(25) NOT NULL DEFAULT 'pending',
   `orderDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `quantity` int NOT NULL,
@@ -197,8 +288,10 @@ CREATE TABLE IF NOT EXISTS `socialorder` (
 --
 
 INSERT INTO `socialorder` (`id`, `serviceId`, `advId`, `amountSpent`, `status`, `orderDate`, `quantity`, `orderCountTrack`, `socialUrl`) VALUES
-('AASR-93203', 2, 15, 29, 'In Progress', '2025-08-12 09:30:29', 10, 9, 'https://web.facebook.com/akubue.alex1'),
-('WGM-40528', 5, 15, 44, 'In Progress', '2025-08-12 09:32:17', 300, 299, 'https://web.facebook.com/akubue.alex1');
+('IF-61607', 3, 15, 29.00, 'In Progress', '2025-08-28 07:54:55', 10, 8, 'https://web.facebook.com/akubue.alex1'),
+('IF-80217', 3, 15, 28.80, 'In Progress', '2025-09-01 07:43:38', 10, 9, 'https://web.facebook.com/akubue.alex1'),
+('WGM-40528', 5, 15, 44.00, 'In Progress', '2025-08-12 09:32:17', 300, 299, 'https://web.facebook.com/akubue.alex1'),
+('WGM-83801', 5, 15, 15.00, 'In Progress', '2025-09-01 07:36:16', 100, 99, 'https://web.facebook.com/akubue.alex1');
 
 -- --------------------------------------------------------
 
@@ -224,8 +317,7 @@ CREATE TABLE IF NOT EXISTS `task` (
 --
 
 INSERT INTO `task` (`id`, `orderId`, `earnerId`, `status`, `receipt`, `taskDate`) VALUES
-('AASR-11166', 'AASR-93203', 14, 'Pending Approval', 'screenshot/receipt_689b2f1fc06d23.30263788.PNG', '2025-08-12 11:50:21'),
-('WGM-65697', 'WGM-40528', 14, 'Pending Approval', 'screenshot/receipt_689b2bc13f5669.97641218.PNG', '2025-08-12 11:55:27');
+('IF-51144', 'IF-61607', 17, 'Pending Approval', 'screenshot/receipt_68b5c02a97ca55.07877121.JPG', '2025-09-01 15:46:21');
 
 -- --------------------------------------------------------
 
@@ -247,15 +339,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   `verifiedStatus` tinyint(1) NOT NULL DEFAULT '0',
   `resetToken` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `fullName`, `pass`, `userType`, `profilePicture`, `userName`, `email`, `phone`, `otp`, `verifiedStatus`, `resetToken`) VALUES
-(14, 'Earner TItoo', '81dc9bdb52d04dc20036dbd8313ed055', 'earner', '', 'earner', 'earner@gmail.com', '0909774643', 94901, 1, ''),
-(15, 'lexcyd Xino', 'a4241229e67258cfcbb7fdd683d14277', 'advertiser', '', 'lexcyd', 'lexcyd@gmail.com', '09065151127', 87517, 1, '');
+(15, 'lexcyd Xino', 'a4241229e67258cfcbb7fdd683d14277', 'advertiser', '', 'lexcyd', 'lexcyd@gmail.com', '09065151127', 87517, 1, ''),
+(17, 'Earner Tito', 'a4241229e67258cfcbb7fdd683d14277', 'earner', '', 'Tito', 'earner@gmail.com', '09065151126', 32640, 1, '');
 
 -- --------------------------------------------------------
 
@@ -277,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `wallet` (
 --
 
 INSERT INTO `wallet` (`id`, `userId`, `balance`) VALUES
-(4, 15, 323.10);
+(4, 15, 231.55);
 
 -- --------------------------------------------------------
 
@@ -297,16 +389,15 @@ CREATE TABLE IF NOT EXISTS `withdrawal` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `withdrawal`
---
-
-INSERT INTO `withdrawal` (`id`, `userId`, `amount`, `status`, `withdrawDate`) VALUES
-(1, 14, 350.00, 'Completed', '2025-08-14 11:40:01'),
-(2, 14, 400.00, 'Completed', '2025-08-14 12:19:52');
-
---
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `admintask`
+--
+ALTER TABLE `admintask`
+  ADD CONSTRAINT `admintask_ibfk_1` FOREIGN KEY (`adminServiceId`) REFERENCES `adminservice` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `admintask_ibfk_2` FOREIGN KEY (`earnerId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `earnerwallet`
@@ -325,6 +416,12 @@ ALTER TABLE `earning`
 --
 ALTER TABLE `referral`
   ADD CONSTRAINT `referral_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `service`
+--
+ALTER TABLE `service`
+  ADD CONSTRAINT `service_ibfk_1` FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `socialorder`
